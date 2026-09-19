@@ -49,24 +49,52 @@
     }
 
     .menu-shell {
+      position: relative;
       width: min(1120px, 100%);
-      background: rgba(255,255,255,.82);
-      border: 2px solid rgba(255,255,255,.9);
+      background:
+        radial-gradient(circle at 86% 15%, rgba(255,209,102,.18) 0 5px, transparent 6px),
+        radial-gradient(circle at 90% 24%, rgba(138,102,217,.12) 0 4px, transparent 5px),
+        radial-gradient(circle at 82% 28%, rgba(22,168,154,.13) 0 6px, transparent 7px),
+        rgba(255,255,255,.90);
+      border: 4px solid rgba(255,255,255,.94);
       border-radius: 34px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 20px 55px rgba(23,50,77,.15), inset 0 0 0 2px rgba(75,134,232,.07);
       padding: clamp(24px, 4vw, 50px);
       backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .menu-shell::after {
+      content: "";
+      position: absolute;
+      right: 52px;
+      top: 42px;
+      width: 106px;
+      height: 48px;
+      border-radius: 999px;
+      background: rgba(223,244,255,.90);
+      box-shadow: -30px 12px 0 -7px rgba(223,244,255,.90), 30px 13px 0 -9px rgba(223,244,255,.90);
+      pointer-events: none;
     }
 
     .eyebrow {
-      margin: 0 0 8px;
-      color: var(--blue);
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      margin: 0 0 12px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #fff0b8;
+      color: #8b5a00;
       font-size: clamp(.9rem, 1.5vw, 1.05rem);
       font-weight: 900;
-      letter-spacing: .15em;
+      letter-spacing: .08em;
+      box-shadow: 0 5px 0 rgba(240,155,50,.16);
     }
 
     h1 {
+      position: relative;
+      z-index: 1;
       margin: 0;
       color: var(--navy);
       font-size: clamp(2.15rem, 5.2vw, 4.7rem);
@@ -74,8 +102,18 @@
       letter-spacing: -.04em;
     }
 
+    .title-split { color: #ed8c2b; text-shadow: 0 4px 0 #ffedcf; }
+    .title-and { color: var(--purple); font-size: .72em; padding: 0 .05em; }
+    .title-combine { color: var(--teal); text-shadow: 0 4px 0 #d8f5ef; }
+
     .lead {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
       margin: 14px 0 30px;
+      padding: 9px 15px;
+      border-radius: 14px 14px 14px 4px;
+      background: #eef6ff;
       color: var(--muted);
       font-size: clamp(1rem, 2vw, 1.3rem);
       font-weight: 700;
@@ -89,21 +127,34 @@
 
     .mode-card {
       position: relative;
-      min-height: 290px;
-      padding: 28px;
-      border: 0;
+      min-height: 330px;
+      padding: 28px 28px 76px;
+      border: 4px solid rgba(255,255,255,.95);
       border-radius: 28px;
       color: var(--ink);
       text-align: left;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(23,50,77,.10);
+      box-shadow: 0 12px 0 rgba(23,50,77,.07), 0 18px 34px rgba(23,50,77,.10);
       transition: transform .16s ease, box-shadow .16s ease;
       overflow: hidden;
     }
 
+    .mode-card::after {
+      content: "";
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      right: -35px;
+      top: -42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.34);
+      box-shadow: -58px -14px 0 -28px rgba(255,255,255,.45);
+      pointer-events: none;
+    }
+
     .mode-card:hover, .mode-card:focus-visible {
       transform: translateY(-5px);
-      box-shadow: 0 18px 34px rgba(23,50,77,.17);
+      box-shadow: 0 12px 0 rgba(23,50,77,.07), 0 24px 40px rgba(23,50,77,.17);
       outline: 4px solid rgba(75,134,232,.25);
     }
 
@@ -156,6 +207,31 @@
     .math-orb.blue { background: linear-gradient(145deg, #70a9ff, #426fd2); }
     .math-orb.orange { background: linear-gradient(145deg, #ffc15a, #ef704f); }
 
+    .math-orb.face::before {
+      content: "";
+      position: absolute;
+      left: 14px;
+      top: 18px;
+      width: 6px;
+      height: 7px;
+      border-radius: 50%;
+      background: #17324d;
+      box-shadow: 20px 0 0 #17324d;
+    }
+
+    .math-orb.face::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      top: 29px;
+      width: 15px;
+      height: 8px;
+      border-bottom: 3px solid #17324d;
+      border-radius: 0 0 50% 50%;
+    }
+
+    .mode-card:hover .math-orb.face { animation: mascotBounce .55s ease; }
+
     .math-operator {
       flex: 0 0 42px;
       width: 42px;
@@ -179,17 +255,43 @@
       padding-bottom: 4px;
     }
 
-    .mode-card h2 { margin: 0 0 8px; font-size: clamp(1.55rem, 3vw, 2.3rem); }
+    .mode-kicker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      margin-bottom: 8px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: #6c4e24;
+      font-size: .88rem;
+      font-weight: 950;
+      letter-spacing: .08em;
+    }
+
+    .mode-card.combine .mode-kicker { color: #087b71; }
+    .mode-card h2 { margin: 0 0 8px; font-size: clamp(1.65rem, 3vw, 2.35rem); line-height: 1.15; }
     .mode-card p { margin: 0; color: #4c6277; font-weight: 800; line-height: 1.55; }
     .mode-go {
       position: absolute;
       right: 24px;
-      bottom: 22px;
+      bottom: 20px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      min-height: 42px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
       font-weight: 900;
       color: var(--navy);
+      box-shadow: 0 5px 0 rgba(23,50,77,.10);
+    }
+
+    @keyframes mascotBounce {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      35% { transform: translateY(-6px) rotate(-4deg); }
+      70% { transform: translateY(-2px) rotate(4deg); }
     }
 
     .game-view { display: none; }
@@ -579,25 +681,27 @@
     <section class="menu-view" aria-labelledby="mainTitle">
       <div class="menu-shell">
         <p class="eyebrow">一年級數學・雙組觸控競賽</p>
-        <h1 id="mainTitle">10 以內的分與合</h1>
+        <h1 id="mainTitle">10 以內的<span class="title-split">分</span><span class="title-and">與</span><span class="title-combine">合</span></h1>
         <p class="lead">選一個挑戰，讓左右兩隊同時想、同時說、同時作答。</p>
         <div class="mode-grid">
           <button class="mode-card split" data-mode="split" aria-label="開始 10 以內的分：分一分快手王">
             <span class="mode-icon" aria-hidden="true">
-              <span class="math-orb cookie"></span>
+              <span class="math-orb cookie face"></span>
               <span class="math-operator minus">−</span>
               <span class="math-orb cookie-piece"></span>
             </span>
+            <span class="mode-kicker">拆拆任務</span>
             <h2>分一分快手王</h2>
             <p>看到「全部」和其中一部分，找出另一部分。</p>
             <span class="mode-go">玩【10 以內的分】→</span>
           </button>
           <button class="mode-card combine" data-mode="combine" aria-label="開始 10 以內的合：合起來快答王">
             <span class="mode-icon" aria-hidden="true">
-              <span class="math-orb blue"></span>
+              <span class="math-orb blue face"></span>
               <span class="math-operator plus">+</span>
-              <span class="math-orb orange"></span>
+              <span class="math-orb orange face"></span>
             </span>
+            <span class="mode-kicker">合合任務</span>
             <h2>合起來快答王</h2>
             <p>看到兩部分，找出合起來的「全部」。</p>
             <span class="mode-go">玩【10 以內的合】→</span>
@@ -921,7 +1025,7 @@
         oscillator.frequency.setValueAtTime(correct ? 540 : 180, now);
         if (correct) oscillator.frequency.exponentialRampToValueAtTime(780, now + .16);
         gain.gain.setValueAtTime(.0001, now);
-        gain.gain.exponentialRampToValueAtTime(.16, now + .02);
+        gain.gain.exponentialRampToValueAtTime(correct ? .27 : .18, now + .02);
         gain.gain.exponentialRampToValueAtTime(.0001, now + .24);
         oscillator.connect(gain).connect(context.destination);
         oscillator.start(now);
@@ -939,7 +1043,7 @@
         oscillator.type = "square";
         oscillator.frequency.setValueAtTime(230, now);
         oscillator.frequency.exponentialRampToValueAtTime(70, now + .12);
-        gain.gain.setValueAtTime(.09, now);
+        gain.gain.setValueAtTime(.19, now);
         gain.gain.exponentialRampToValueAtTime(.0001, now + .14);
         oscillator.connect(gain).connect(context.destination);
         oscillator.start(now);
@@ -957,7 +1061,7 @@
         oscillator.type = "triangle";
         oscillator.frequency.setValueAtTime(musicNotes[musicStep % musicNotes.length], now);
         gain.gain.setValueAtTime(.0001, now);
-        gain.gain.exponentialRampToValueAtTime(.022, now + .03);
+        gain.gain.exponentialRampToValueAtTime(.055, now + .03);
         gain.gain.exponentialRampToValueAtTime(.0001, now + .32);
         oscillator.connect(gain).connect(context.destination);
         oscillator.start(now);
