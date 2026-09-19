@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>10 以內的分與合｜雙組競賽</title>
+  <style>
+    :root {
+      --ink: #17324d;
+      --muted: #5f7184;
+      --paper: #f7fbff;
+      --sky: #dff4ff;
+      --navy: #102f4f;
+      --teal: #16a89a;
+      --teal-soft: #d9f7f2;
+      --coral: #ff6b62;
+      --coral-soft: #ffe4df;
+      --yellow: #ffd166;
+      --blue: #4b86e8;
+      --purple: #8a66d9;
+      --shadow: 0 14px 38px rgba(23, 50, 77, .14);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255, 209, 102, .45) 0 5%, transparent 5.2%),
+        radial-gradient(circle at 92% 88%, rgba(22, 168, 154, .20) 0 8%, transparent 8.2%),
+        linear-gradient(145deg, #e9f8ff 0%, #f8fcff 48%, #edf8f4 100%);
+      font-family: "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    button, input, select { font: inherit; }
+    button { touch-action: manipulation; }
+
+    .app { min-height: 100vh; padding: 18px; }
+
+    .menu-view {
+      min-height: calc(100vh - 36px);
+      display: grid;
+      place-items: center;
+    }
+
+    .menu-shell {
+      width: min(1120px, 100%);
+      background: rgba(255,255,255,.82);
+      border: 2px solid rgba(255,255,255,.9);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 50px);
+      backdrop-filter: blur(10px);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: clamp(.9rem, 1.5vw, 1.05rem);
+      font-weight: 900;
+      letter-spacing: .15em;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(2.15rem, 5.2vw, 4.7rem);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+    }
+
+    .lead {
+      margin: 14px 0 30px;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .mode-card {
+      position: relative;
+      min-height: 290px;
+      padding: 28px;
+      border: 0;
+      border-radius: 28px;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(23,50,77,.10);
+      transition: transform .16s ease, box-shadow .16s ease;
+      overflow: hidden;
+    }
+
+    .mode-card:hover, .mode-card:focus-visible {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 34px rgba(23,50,77,.17);
+      outline: 4px solid rgba(75,134,232,.25);
+    }
+
+    .mode-card.split { background: linear-gradient(135deg, #fff6d8, #ffeadf); }
+    .mode-card.combine { background: linear-gradient(135deg, #dcf8f1, #dfeeff); }
+
+    .mode-icon {
+      width: 90px;
+      height: 90px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.78);
+      font-size: 3.4rem;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.75);
+    }
+
+    .mode-card h2 { margin: 0 0 8px; font-size: clamp(1.55rem, 3vw, 2.3rem); }
+    .mode-card p { margin: 0; color: #4c6277; font-weight: 800; line-height: 1.55; }
+    .mode-go {
+      position: absolute;
+      right: 24px;
+      bottom: 22px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      color: var(--navy);
+    }
+
+    .game-view { display: none; }
+    body.playing .menu-view { display: none; }
+    body.playing .game-view { display: block; }
+
+    .control-bar {
+      max-width: 1500px;
+      margin: 0 auto 14px;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto minmax(330px, 1fr);
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(23,50,77,.10);
+      border-radius: 22px;
+      box-shadow: 0 8px 22px rgba(23,50,77,.10);
+    }
+
+    .title-cluster { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .title-cluster h2 { margin: 0; font-size: clamp(1.05rem, 2vw, 1.55rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .icon-btn, .tool-btn, .primary-btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .icon-btn { min-width: 46px; padding: 0 14px; background: #e9f2f8; color: var(--ink); }
+    .tool-btn { padding: 0 15px; background: #eef5f9; color: var(--ink); }
+    .primary-btn { padding: 0 20px; background: var(--navy); color: white; box-shadow: 0 6px 0 #081c2e; }
+    .primary-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #081c2e; }
+    .icon-btn:focus-visible, .tool-btn:focus-visible, .primary-btn:focus-visible, select:focus-visible, input:focus-visible { outline: 4px solid rgba(75,134,232,.32); outline-offset: 2px; }
+
+    .clock {
+      min-width: 132px;
+      display: grid;
+      place-items: center;
+      padding: 8px 18px;
+      border-radius: 18px;
+      background: var(--navy);
+      color: white;
+      font-size: clamp(1.55rem, 3.2vw, 2.6rem);
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .04em;
+    }
+
+    .clock.urgent { background: #d94b43; animation: pulse .8s ease-in-out infinite alternate; }
+
+    .tools { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .select-wrap { display: flex; align-items: center; gap: 6px; padding: 0 10px; min-height: 46px; border-radius: 14px; background: #eef5f9; font-weight: 900; }
+    select { border: 0; color: var(--ink); background: transparent; font-weight: 900; cursor: pointer; }
+
+    .arena {
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .team-panel {
+      position: relative;
+      min-height: calc(100vh - 108px);
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,.96);
+      border: 4px solid transparent;
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .team-panel.team-a { border-color: var(--teal); }
+    .team-panel.team-b { border-color: var(--coral); }
+
+    .team-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 18px;
+    }
+
+    .team-a .team-head { background: var(--teal-soft); }
+    .team-b .team-head { background: var(--coral-soft); }
+
+    .team-name {
+      width: min(220px, 100%);
+      border: 0;
+      border-bottom: 3px solid currentColor;
+      background: transparent;
+      color: var(--ink);
+      font-size: clamp(1.2rem, 2.2vw, 1.75rem);
+      font-weight: 950;
+    }
+
+    .score-box { display: flex; align-items: baseline; gap: 5px; font-weight: 900; }
+    .score { font-size: clamp(1.9rem, 3vw, 2.8rem); font-variant-numeric: tabular-nums; }
+    .streak { padding: 7px 10px; border-radius: 999px; background: white; color: #9a5a00; font-weight: 950; }
+
+    .challenge {
+      flex: 1;
+      display: grid;
+      grid-template-rows: auto minmax(235px, 1fr) auto;
+      gap: 9px;
+      padding: clamp(14px, 2.2vw, 24px);
+    }
+
+    .prompt-line {
+      min-height: 46px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .math-stage {
+      min-height: 235px;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+      border-radius: 22px;
+      background:
+        linear-gradient(rgba(75,134,232,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(75,134,232,.055) 1px, transparent 1px),
+        #fbfdff;
+      background-size: 24px 24px;
+      border: 2px solid #e4edf4;
+    }
+
+    .part-whole {
+      width: min(500px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "top top" "branch branch" "left right" "sentence sentence";
+      gap: 8px 18px;
+      align-items: stretch;
+    }
+
+    .number-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 78px;
+      padding: 10px;
+      border: 3px solid #b8cad8;
+      border-radius: 19px;
+      background: white;
+      box-shadow: 0 5px 0 rgba(23,50,77,.10);
+    }
+
+    .number-card.top { grid-area: top; width: 52%; min-width: 190px; justify-self: center; border-color: var(--yellow); }
+    .number-card.left { grid-area: left; border-color: var(--teal); }
+    .number-card.right { grid-area: right; border-color: var(--coral); }
+    .number-card.unknown { background: repeating-linear-gradient(135deg, #fff 0 12px, #f2f6fa 12px 24px); }
+
+    .branch {
+      grid-area: branch;
+      position: relative;
+      height: 26px;
+    }
+
+    .branch::before, .branch::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      width: 27%;
+      height: 24px;
+      border-top: 4px solid #91a8ba;
+    }
+
+    .branch::before { left: 23%; border-left: 4px solid #91a8ba; transform: skewX(-27deg); transform-origin: left top; }
+    .branch::after { right: 23%; border-right: 4px solid #91a8ba; transform: skewX(27deg); transform-origin: right top; }
+
+    .number {
+      color: var(--navy);
+      font-size: clamp(2rem, 4.2vw, 3.6rem);
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .unknown .number { color: var(--purple); }
+    .tiny-label { margin-top: 4px; color: var(--muted); font-size: .82rem; font-weight: 900; }
+
+    .dots { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; max-width: 220px; margin-top: 7px; }
+    .dot { width: clamp(13px, 1.8vw, 21px); aspect-ratio: 1; border-radius: 50%; background: var(--blue); box-shadow: inset 0 -3px 0 rgba(0,0,0,.12); }
+
+    .sentence {
+      grid-area: sentence;
+      padding-top: 5px;
+      text-align: center;
+      font-size: clamp(1.25rem, 2.4vw, 2rem);
+      font-weight: 950;
+      color: var(--navy);
+    }
+
+    .blank {
+      display: inline-grid;
+      min-width: 1.5em;
+      place-items: center;
+      border-bottom: 5px solid var(--purple);
+      color: var(--purple);
+    }
+
+    .answer-zone { padding-top: 4px; overflow: hidden; }
+    .answer-label { margin: 0 0 9px; text-align: center; color: var(--muted); font-weight: 900; }
+    .answers {
+      position: relative;
+      height: clamp(132px, 12vw, 172px);
+      overflow: hidden;
+      border-top: 2px dashed #d9e6ef;
+    }
+
+    .answer-btn {
+      position: absolute;
+      left: calc(var(--slot) * 25% + 1.5%);
+      bottom: 8px;
+      width: 22%;
+      min-height: clamp(76px, 9vw, 108px);
+      border: 0;
+      border-radius: 50% 50% 45% 45%;
+      background: var(--blue);
+      color: white;
+      font-size: clamp(2rem, 4.2vw, 3.7rem);
+      font-weight: 950;
+      text-shadow: 0 3px 0 rgba(0,0,0,.18);
+      cursor: pointer;
+      box-shadow: inset 0 -10px 0 rgba(0,0,0,.14), 0 8px 0 rgba(23,50,77,.16);
+      animation: balloonRise var(--balloon-time, 9s) linear forwards;
+      animation-play-state: paused;
+      transition: filter .1s ease, scale .1s ease;
+      transform-origin: center center;
+      z-index: 1;
+    }
+
+    body.is-running .answer-btn { animation-play-state: running; }
+
+    .answer-btn::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 92%;
+      width: 2px;
+      height: 45px;
+      background: rgba(23,50,77,.40);
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+
+    .answer-btn::after {
+      content: "";
+      position: absolute;
+      left: 22%; top: 13%;
+      width: 24%; height: 16%;
+      border-radius: 50%;
+      background: rgba(255,255,255,.42);
+      transform: rotate(-18deg);
+    }
+
+    .answer-btn:hover, .answer-btn:focus-visible { filter: brightness(1.08); scale: 1.04; outline: 4px solid rgba(23,50,77,.22); outline-offset: 3px; }
+    .answer-btn:active { scale: .96; box-shadow: inset 0 -6px 0 rgba(0,0,0,.14), 0 3px 0 rgba(23,50,77,.16); }
+    .answer-btn:nth-child(1) { background: #4b86e8; }
+    .answer-btn:nth-child(2) { background: #f09b32; }
+    .answer-btn:nth-child(3) { background: #8a66d9; }
+    .answer-btn:nth-child(4) { background: #52b788; }
+    .answer-btn.popping {
+      animation: balloonPop .42s ease-out forwards !important;
+      pointer-events: none;
+    }
+
+    .feedback {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      z-index: 4;
+      transform: translate(-50%, -50%) scale(.8);
+      padding: 16px 28px;
+      border-radius: 22px;
+      background: var(--navy);
+      color: white;
+      font-size: clamp(1.25rem, 3vw, 2rem);
+      font-weight: 950;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .feedback.show { animation: popFeedback .55s ease both; }
+    .team-panel.correct { animation: correctGlow .45s ease; }
+    .team-panel.wrong { animation: shake .35s ease; }
+
+    .start-shield {
+      position: absolute;
+      inset: 70px 0 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(247,251,255,.80);
+      backdrop-filter: blur(5px);
+    }
+
+    .start-shield.hidden { display: none; }
+    .shield-card { max-width: 370px; padding: 24px; border-radius: 24px; background: white; box-shadow: var(--shadow); text-align: center; }
+    .shield-card strong { display: block; margin-bottom: 8px; color: var(--navy); font-size: clamp(1.35rem, 2.5vw, 2rem); }
+    .shield-card span { color: var(--muted); font-weight: 800; }
+
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(11,34,55,.72);
+      backdrop-filter: blur(7px);
+    }
+
+    .result-modal.show { display: grid; }
+    .result-card { width: min(560px, 100%); padding: 32px; border-radius: 30px; background: white; text-align: center; box-shadow: 0 28px 60px rgba(0,0,0,.28); }
+    .trophy { font-size: 5rem; }
+    .result-card h2 { margin: 6px 0; color: var(--navy); font-size: clamp(1.8rem, 4vw, 3rem); }
+    .result-card p { margin: 8px 0 22px; color: var(--muted); font-size: 1.15rem; font-weight: 800; }
+    .result-scores { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+    .result-score { padding: 16px; border-radius: 18px; background: #f0f6fa; font-weight: 900; }
+    .result-score b { display: block; color: var(--navy); font-size: 2.4rem; }
+
+    @keyframes popFeedback {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.7); }
+      35% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+      75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -62%) scale(.96); }
+    }
+
+    @keyframes correctGlow { 50% { box-shadow: 0 0 0 9px rgba(255,209,102,.75), var(--shadow); } }
+    @keyframes shake { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-5px); } }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+    @keyframes balloonRise {
+      0% { transform: translate(0, 54px) rotate(-1deg); }
+      24% { transform: translate(5px, 26px) rotate(1deg); }
+      49% { transform: translate(-4px, -2px) rotate(-1deg); }
+      74% { transform: translate(5px, -31px) rotate(1deg); }
+      100% { transform: translate(0, -62px) rotate(0); }
+    }
+    @keyframes balloonPop {
+      0% { transform: translateY(-62px) scale(1); opacity: 1; }
+      45% { transform: translateY(-62px) scale(1.28); opacity: 1; filter: brightness(1.35); }
+      100% { transform: translateY(-62px) scale(.05); opacity: 0; filter: brightness(1.8); }
+    }
+    @keyframes balloonRiseReduced {
+      from { transform: translateY(20px); }
+      to { transform: translateY(-48px); }
+    }
+
+    @media (max-width: 980px) {
+      .control-bar { grid-template-columns: 1fr auto; }
+      .tools { grid-column: 1 / -1; justify-content: center; }
+      .team-panel { min-height: 720px; }
+    }
+
+    @media (max-width: 700px) {
+      .app { padding: 9px; }
+      .mode-grid, .arena { grid-template-columns: 1fr; }
+      .control-bar { position: sticky; top: 5px; z-index: 10; }
+      .team-panel { min-height: 680px; }
+      .team-head { grid-template-columns: 1fr auto; }
+      .streak { grid-column: 1 / -1; justify-self: start; }
+      .select-wrap { font-size: .92rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+      .answer-btn { animation-name: balloonRiseReduced !important; animation-duration: var(--balloon-time, 9s) !important; }
+      .answer-btn.popping { animation-name: balloonPop !important; animation-duration: .2s !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="menu-view" aria-labelledby="mainTitle">
+      <div class="menu-shell">
+        <p class="eyebrow">一年級數學・雙組觸控競賽</p>
+        <h1 id="mainTitle">10 以內的分與合</h1>
+        <p class="lead">選一個挑戰，讓左右兩隊同時想、同時說、同時作答。</p>
+        <div class="mode-grid">
+          <button class="mode-card split" data-mode="split" aria-label="開始 10 以內的分：分一分快手王">
+            <span class="mode-icon" aria-hidden="true">🍪↘</span>
+            <h2>分一分快手王</h2>
+            <p>看到「全部」和其中一部分，找出另一部分。</p>
+            <span class="mode-go">玩【10 以內的分】→</span>
+          </button>
+          <button class="mode-card combine" data-mode="combine" aria-label="開始 10 以內的合：合起來快答王">
+            <span class="mode-icon" aria-hidden="true">🔵＋🟠</span>
+            <h2>合起來快答王</h2>
+            <p>看到兩部分，找出合起來的「全部」。</p>
+            <span class="mode-go">玩【10 以內的合】→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="game-view" aria-label="雙組競賽遊戲">
+      <header class="control-bar">
+        <div class="title-cluster">
+          <button class="icon-btn" id="backBtn" aria-label="回到遊戲選單">← 選遊戲</button>
+          <h2 id="modeTitle">分一分快手王</h2>
+        </div>
+        <div class="clock" id="clock" aria-live="polite">01:00</div>
+        <div class="tools">
+          <label class="select-wrap">範圍
+            <select id="rangeSelect" aria-label="題目數字範圍">
+              <option value="5">5 以內</option>
+              <option value="10" selected>10 以內</option>
+            </select>
+          </label>
+          <label class="select-wrap">時間
+            <select id="durationSelect" aria-label="競賽時間">
+              <option value="45">45 秒</option>
+              <option value="60" selected>60 秒</option>
+              <option value="90">90 秒</option>
+              <option value="120">120 秒</option>
+            </select>
+          </label>
+          <label class="select-wrap">氣球
+            <select id="balloonSpeedSelect" aria-label="氣球飄升速度">
+              <option value="12">入門</option>
+              <option value="9" selected>標準</option>
+              <option value="7">挑戰</option>
+            </select>
+          </label>
+          <button class="tool-btn" id="soundBtn" aria-pressed="true">🔊 音效</button>
+          <button class="tool-btn" id="musicBtn" aria-pressed="true">🎵 音樂</button>
+          <button class="tool-btn" id="fullBtn">⛶ 全螢幕</button>
+          <button class="tool-btn" id="resetBtn">↻ 重設</button>
+          <button class="primary-btn" id="startBtn">開始</button>
+        </div>
+      </header>
+
+      <div class="arena">
+        <article class="team-panel team-a" data-team="0">
+          <div class="team-head">
+            <input class="team-name" value="藍綠隊" maxlength="8" aria-label="左隊隊名">
+            <div class="score-box"><span class="score">0</span><span>分</span></div>
+            <div class="streak">連續 0 題</div>
+          </div>
+          <div class="challenge">
+            <div class="prompt-line"></div>
+            <div class="math-stage"></div>
+            <div class="answer-zone">
+              <p class="answer-label">點一下正確的數字球</p>
+              <div class="answers"></div>
+            </div>
+          </div>
+          <div class="feedback" aria-live="assertive"></div>
+          <div class="start-shield"><div class="shield-card"><strong>準備好了嗎？</strong><span>老師按「開始」後，一起找答案。</span></div></div>
+        </article>
+
+        <article class="team-panel team-b" data-team="1">
+          <div class="team-head">
+            <input class="team-name" value="珊瑚隊" maxlength="8" aria-label="右隊隊名">
+            <div class="score-box"><span class="score">0</span><span>分</span></div>
+            <div class="streak">連續 0 題</div>
+          </div>
+          <div class="challenge">
+            <div class="prompt-line"></div>
+            <div class="math-stage"></div>
+            <div class="answer-zone">
+              <p class="answer-label">點一下正確的數字球</p>
+              <div class="answers"></div>
+            </div>
+          </div>
+          <div class="feedback" aria-live="assertive"></div>
+          <div class="start-shield"><div class="shield-card"><strong>準備好了嗎？</strong><span>老師按「開始」後，一起找答案。</span></div></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="result-modal" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="resultTitle">
+    <div class="result-card">
+      <div class="trophy" aria-hidden="true">🏆</div>
+      <h2 id="resultTitle">完成挑戰！</h2>
+      <p id="resultText">兩隊都完成了精彩的思考。</p>
+      <div class="result-scores">
+        <div class="result-score"><span id="resultName0">藍綠隊</span><b id="resultScore0">0</b>題</div>
+        <div class="result-score"><span id="resultName1">珊瑚隊</span><b id="resultScore1">0</b>題</div>
+      </div>
+      <button class="primary-btn" id="againBtn">再玩一局</button>
+    </div>
+  </div>
+
+  <script>
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    const state = {
+      mode: null,
+      rangeMax: 10,
+      duration: 60,
+      timeLeft: 60,
+      running: false,
+      started: false,
+      sound: true,
+      music: true,
+      balloonSeconds: 9,
+      timerId: null,
+      teams: [
+        { score: 0, streak: 0, question: null, locked: false, previousKey: "" },
+        { score: 0, streak: 0, question: null, locked: false, previousKey: "" }
+      ]
+    };
+
+    const modeCopy = {
+      split: {
+        title: "分一分快手王",
+        prompt: "看全部和一部分，找出另一部分",
+        sentence: q => `${q.total} 可以分成 ${q.known} 和 <span class="blank">□</span>`
+      },
+      combine: {
+        title: "合起來快答王",
+        prompt: "看兩部分，找出合起來的全部",
+        sentence: q => `${q.a} 和 ${q.b} 合起來是 <span class="blank">□</span>`
+      }
+    };
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function shuffled(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function makeOptions(answer, max) {
+      const values = new Set([answer]);
+      const near = shuffled([answer - 1, answer + 1, answer - 2, answer + 2]);
+      near.forEach(value => {
+        if (value >= 1 && value <= max && values.size < 4) values.add(value);
+      });
+      while (values.size < 4) values.add(randomInt(1, max));
+      return shuffled([...values]);
+    }
+
+    function generateQuestion(previousKey = "") {
+      let question;
+      let guard = 0;
+      do {
+        if (state.mode === "split") {
+          const total = randomInt(3, state.rangeMax);
+          const known = randomInt(1, total - 1);
+          const answer = total - known;
+          question = {
+            total, known, answer,
+            knownSide: Math.random() < .5 ? "left" : "right",
+            key: `s-${total}-${known}`
+          };
+        } else {
+          const total = randomInt(2, state.rangeMax);
+          const a = randomInt(1, total - 1);
+          const b = total - a;
+          question = { a, b, total, answer: total, key: `c-${a}-${b}` };
+        }
+        guard += 1;
+      } while (question.key === previousKey && guard < 20);
+      question.options = makeOptions(question.answer, state.rangeMax);
+      return question;
+    }
+
+    function dots(count) {
+      return `<div class="dots" aria-hidden="true">${Array.from({ length: count }, () => '<span class="dot"></span>').join("")}</div>`;
+    }
+
+    function numberCard(area, number, label, extraClass = "") {
+      const dotMarkup = number === "?" ? "" : dots(number);
+      return `<div class="number-card ${area} ${extraClass}"><span class="number">${number}</span>${dotMarkup}<span class="tiny-label">${label}</span></div>`;
+    }
+
+    function splitModel(q) {
+      const known = numberCard(q.knownSide, q.known, "一部分");
+      const unknownSide = q.knownSide === "left" ? "right" : "left";
+      const unknown = numberCard(unknownSide, "?", "另一部分", "unknown");
+      return `
+        <div class="part-whole" aria-label="全部是 ${q.total}，一部分是 ${q.known}，求另一部分">
+          ${numberCard("top", q.total, "全部")}
+          <div class="branch" aria-hidden="true"></div>
+          ${known}${unknown}
+          <div class="sentence">${modeCopy.split.sentence(q)}</div>
+        </div>`;
+    }
+
+    function combineModel(q) {
+      return `
+        <div class="part-whole" aria-label="一部分是 ${q.a}，另一部分是 ${q.b}，求全部">
+          ${numberCard("top", "?", "全部", "unknown")}
+          <div class="branch" aria-hidden="true"></div>
+          ${numberCard("left", q.a, "一部分")}
+          ${numberCard("right", q.b, "另一部分")}
+          <div class="sentence">${modeCopy.combine.sentence(q)}</div>
+        </div>`;
+    }
+
+    function renderTeam(index) {
+      const team = state.teams[index];
+      const panel = $(`.team-panel[data-team="${index}"]`);
+      if (!team.question) {
+        team.question = generateQuestion(team.previousKey);
+        team.previousKey = team.question.key;
+      }
+      $(".prompt-line", panel).textContent = modeCopy[state.mode].prompt;
+      $(".math-stage", panel).innerHTML = state.mode === "split" ? splitModel(team.question) : combineModel(team.question);
+      $(".score", panel).textContent = team.score;
+      $(".streak", panel).textContent = `連續 ${team.streak} 題`;
+      const answers = $(".answers", panel);
+      answers.innerHTML = team.question.options.map((value, slot) => `<button class="answer-btn" style="--slot:${slot};--balloon-time:${state.balloonSeconds}s" data-answer="${value}" aria-label="答案 ${value}">${value}</button>`).join("");
+      $$(".answer-btn", answers).forEach((button, slot) => {
+        button.addEventListener("click", () => chooseAnswer(index, Number(button.dataset.answer)));
+        if (slot === 0) {
+          button.addEventListener("animationend", event => {
+            if (event.animationName === "balloonRise" || event.animationName === "balloonRiseReduced") {
+              expireQuestion(index, team.question.key);
+            }
+          });
+        }
+      });
+    }
+
+    function renderAllTeams() {
+      renderTeam(0);
+      renderTeam(1);
+    }
+
+    function chooseAnswer(index, value) {
+      const team = state.teams[index];
+      if (!state.running || team.locked) return;
+      const panel = $(`.team-panel[data-team="${index}"]`);
+      const feedback = $(".feedback", panel);
+      if (value === team.question.answer) {
+        team.locked = true;
+        team.score += 1;
+        team.streak += 1;
+        panel.classList.add("correct");
+        showFeedback(feedback, team.streak >= 3 ? `答對！連續 ${team.streak} 題` : "答對了！");
+        playTone(true);
+        $(".score", panel).textContent = team.score;
+        $(".streak", panel).textContent = `連續 ${team.streak} 題`;
+        setTimeout(() => {
+          panel.classList.remove("correct");
+          team.question = generateQuestion(team.previousKey);
+          team.previousKey = team.question.key;
+          team.locked = false;
+          renderTeam(index);
+        }, 520);
+      } else {
+        team.streak = 0;
+        $(".streak", panel).textContent = "連續 0 題";
+        panel.classList.remove("wrong");
+        void panel.offsetWidth;
+        panel.classList.add("wrong");
+        showFeedback(feedback, "再想一想");
+        playTone(false);
+        setTimeout(() => panel.classList.remove("wrong"), 400);
+      }
+    }
+
+    function expireQuestion(index, questionKey) {
+      const team = state.teams[index];
+      if (!state.running || team.locked || team.question.key !== questionKey) return;
+      team.locked = true;
+      team.streak = 0;
+      const panel = $(`.team-panel[data-team="${index}"]`);
+      $(".streak", panel).textContent = "連續 0 題";
+      $$(".answer-btn", panel).forEach(button => button.classList.add("popping"));
+      showFeedback($(".feedback", panel), "啪！慢了一步");
+      playPopTone();
+      setTimeout(() => {
+        team.question = generateQuestion(team.previousKey);
+        team.previousKey = team.question.key;
+        team.locked = false;
+        renderTeam(index);
+      }, 480);
+    }
+
+    function showFeedback(node, message) {
+      node.textContent = message;
+      node.classList.remove("show");
+      void node.offsetWidth;
+      node.classList.add("show");
+    }
+
+    let audioContext;
+    let musicTimer;
+    let musicStep = 0;
+    const musicNotes = [261.63, 329.63, 392.00, 329.63, 293.66, 349.23, 440.00, 349.23];
+
+    function getAudioContext() {
+      audioContext ??= new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === "suspended") audioContext.resume();
+      return audioContext;
+    }
+
+    function playTone(correct) {
+      if (!state.sound) return;
+      try {
+        const context = getAudioContext();
+        const now = context.currentTime;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = correct ? "sine" : "triangle";
+        oscillator.frequency.setValueAtTime(correct ? 540 : 180, now);
+        if (correct) oscillator.frequency.exponentialRampToValueAtTime(780, now + .16);
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.exponentialRampToValueAtTime(.16, now + .02);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + .24);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(now);
+        oscillator.stop(now + .25);
+      } catch (_) { /* 瀏覽器封鎖音效時仍可正常作答 */ }
+    }
+
+    function playPopTone() {
+      if (!state.sound) return;
+      try {
+        const context = getAudioContext();
+        const now = context.currentTime;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = "square";
+        oscillator.frequency.setValueAtTime(230, now);
+        oscillator.frequency.exponentialRampToValueAtTime(70, now + .12);
+        gain.gain.setValueAtTime(.09, now);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + .14);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(now);
+        oscillator.stop(now + .15);
+      } catch (_) { /* 瀏覽器封鎖音效時仍可正常作答 */ }
+    }
+
+    function playMusicNote() {
+      if (!state.music || !state.running) return;
+      try {
+        const context = getAudioContext();
+        const now = context.currentTime;
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        oscillator.type = "triangle";
+        oscillator.frequency.setValueAtTime(musicNotes[musicStep % musicNotes.length], now);
+        gain.gain.setValueAtTime(.0001, now);
+        gain.gain.exponentialRampToValueAtTime(.022, now + .03);
+        gain.gain.exponentialRampToValueAtTime(.0001, now + .32);
+        oscillator.connect(gain).connect(context.destination);
+        oscillator.start(now);
+        oscillator.stop(now + .34);
+        musicStep += 1;
+      } catch (_) { /* 無音訊權限時不影響遊戲 */ }
+    }
+
+    function startMusic() {
+      stopMusic();
+      if (!state.music || !state.running) return;
+      playMusicNote();
+      musicTimer = setInterval(playMusicNote, 420);
+    }
+
+    function stopMusic() {
+      clearInterval(musicTimer);
+      musicTimer = null;
+    }
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60).toString().padStart(2, "0");
+      const sec = (seconds % 60).toString().padStart(2, "0");
+      return `${min}:${sec}`;
+    }
+
+    function updateClock() {
+      const clock = $("#clock");
+      clock.textContent = formatTime(state.timeLeft);
+      clock.classList.toggle("urgent", state.timeLeft <= 10 && state.started);
+    }
+
+    function startOrPause() {
+      if (state.running) {
+        pauseGame();
+        return;
+      }
+      if (state.timeLeft <= 0) resetGame();
+      state.running = true;
+      state.started = true;
+      document.body.classList.add("is-running");
+      $$(".start-shield").forEach(shield => shield.classList.add("hidden"));
+      $("#startBtn").textContent = "暫停";
+      clearInterval(state.timerId);
+      state.timerId = setInterval(() => {
+        state.timeLeft -= 1;
+        updateClock();
+        if (state.timeLeft <= 0) finishGame();
+      }, 1000);
+      startMusic();
+    }
+
+    function pauseGame() {
+      state.running = false;
+      clearInterval(state.timerId);
+      stopMusic();
+      document.body.classList.remove("is-running");
+      $("#startBtn").textContent = "繼續";
+      $$(".start-shield").forEach(shield => {
+        shield.classList.remove("hidden");
+        $("strong", shield).textContent = "暫停中";
+        $("span", shield).textContent = "老師按「繼續」後再作答。";
+      });
+    }
+
+    function resetGame() {
+      clearInterval(state.timerId);
+      stopMusic();
+      state.running = false;
+      state.started = false;
+      document.body.classList.remove("is-running");
+      state.duration = Number($("#durationSelect").value);
+      state.timeLeft = state.duration;
+      state.rangeMax = Number($("#rangeSelect").value);
+      state.balloonSeconds = Number($("#balloonSpeedSelect").value);
+      state.teams.forEach(team => Object.assign(team, { score: 0, streak: 0, question: null, locked: false, previousKey: "" }));
+      $("#startBtn").textContent = "開始";
+      $("#resultModal").classList.remove("show");
+      $$(".start-shield").forEach(shield => {
+        shield.classList.remove("hidden");
+        $("strong", shield).textContent = "準備好了嗎？";
+        $("span", shield).textContent = "老師按「開始」後，一起找答案。";
+      });
+      updateClock();
+      renderAllTeams();
+    }
+
+    function finishGame() {
+      clearInterval(state.timerId);
+      stopMusic();
+      state.running = false;
+      document.body.classList.remove("is-running");
+      state.timeLeft = 0;
+      updateClock();
+      const names = $$(".team-name").map(input => input.value.trim() || "小隊");
+      const [a, b] = state.teams.map(team => team.score);
+      let title = "平手！一起完成挑戰";
+      let text = "兩隊答對一樣多，請各隊說出一題的想法。";
+      if (a > b) { title = `${names[0]}獲勝！`; text = `${names[1]}也很努力，下一局換人上場。`; }
+      if (b > a) { title = `${names[1]}獲勝！`; text = `${names[0]}也很努力，下一局換人上場。`; }
+      $("#resultTitle").textContent = title;
+      $("#resultText").textContent = text;
+      $("#resultName0").textContent = names[0];
+      $("#resultName1").textContent = names[1];
+      $("#resultScore0").textContent = a;
+      $("#resultScore1").textContent = b;
+      $("#resultModal").classList.add("show");
+      $("#startBtn").textContent = "開始";
+    }
+
+    function openMode(mode) {
+      state.mode = mode;
+      document.body.classList.add("playing");
+      $("#modeTitle").textContent = modeCopy[mode].title;
+      resetGame();
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    $$(".mode-card").forEach(card => card.addEventListener("click", () => openMode(card.dataset.mode)));
+    $("#backBtn").addEventListener("click", () => {
+      clearInterval(state.timerId);
+      stopMusic();
+      state.running = false;
+      document.body.classList.remove("is-running");
+      document.body.classList.remove("playing");
+    });
+    $("#startBtn").addEventListener("click", startOrPause);
+    $("#resetBtn").addEventListener("click", resetGame);
+    $("#againBtn").addEventListener("click", () => { resetGame(); startOrPause(); });
+    $("#rangeSelect").addEventListener("change", resetGame);
+    $("#durationSelect").addEventListener("change", resetGame);
+    $("#balloonSpeedSelect").addEventListener("change", resetGame);
+    $("#soundBtn").addEventListener("click", event => {
+      state.sound = !state.sound;
+      event.currentTarget.textContent = state.sound ? "🔊 音效" : "🔇 靜音";
+      event.currentTarget.setAttribute("aria-pressed", state.sound);
+    });
+    $("#musicBtn").addEventListener("click", event => {
+      state.music = !state.music;
+      event.currentTarget.textContent = state.music ? "🎵 音樂" : "🎵 靜音";
+      event.currentTarget.setAttribute("aria-pressed", state.music);
+      if (state.music && state.running) startMusic();
+      else stopMusic();
+    });
+    $("#fullBtn").addEventListener("click", async () => {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
+      else await document.exitFullscreen?.();
+    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden && state.running) pauseGame(); });
+  </script>
+</body>
+</html>
