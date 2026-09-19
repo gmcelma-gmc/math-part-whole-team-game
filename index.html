@@ -111,15 +111,72 @@
     .mode-card.combine { background: linear-gradient(135deg, #dcf8f1, #dfeeff); }
 
     .mode-icon {
-      width: 90px;
+      width: 210px;
       height: 90px;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 13px;
       margin-bottom: 18px;
+      padding: 12px 14px;
       border-radius: 24px;
       background: rgba(255,255,255,.78);
-      font-size: 3.4rem;
       box-shadow: inset 0 0 0 2px rgba(255,255,255,.75);
+      overflow: hidden;
+    }
+
+    .math-orb {
+      position: relative;
+      flex: 0 0 auto;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      box-shadow: inset -8px -10px 0 rgba(0,0,0,.10), 0 6px 10px rgba(23,50,77,.14);
+    }
+
+    .math-orb.cookie {
+      background:
+        radial-gradient(circle at 28% 28%, #6d4237 0 5%, transparent 6%),
+        radial-gradient(circle at 67% 22%, #6d4237 0 5%, transparent 6%),
+        radial-gradient(circle at 55% 58%, #6d4237 0 7%, transparent 8%),
+        radial-gradient(circle at 24% 70%, #6d4237 0 5%, transparent 6%),
+        radial-gradient(circle at 76% 72%, #6d4237 0 5%, transparent 6%),
+        linear-gradient(145deg, #f5c88e, #d98d69);
+    }
+
+    .math-orb.cookie-piece {
+      width: 42px;
+      height: 42px;
+      background:
+        radial-gradient(circle at 32% 28%, #6d4237 0 6%, transparent 7%),
+        radial-gradient(circle at 68% 66%, #6d4237 0 6%, transparent 7%),
+        linear-gradient(145deg, #f5c88e, #d98d69);
+    }
+
+    .math-orb.blue { background: linear-gradient(145deg, #70a9ff, #426fd2); }
+    .math-orb.orange { background: linear-gradient(145deg, #ffc15a, #ef704f); }
+
+    .math-operator {
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: white;
+      color: var(--navy);
+      font-family: Arial, sans-serif;
+      font-size: 2.15rem;
+      font-weight: 900;
+      line-height: 1;
+      box-shadow: 0 4px 10px rgba(23,50,77,.14);
+    }
+
+    .mode-card.split .math-operator { color: #b36b17; }
+    .mode-card.combine .math-operator { color: var(--teal); }
+
+    .math-operator.minus {
+      padding-bottom: 4px;
     }
 
     .mode-card h2 { margin: 0 0 8px; font-size: clamp(1.55rem, 3vw, 2.3rem); }
@@ -526,13 +583,21 @@
         <p class="lead">選一個挑戰，讓左右兩隊同時想、同時說、同時作答。</p>
         <div class="mode-grid">
           <button class="mode-card split" data-mode="split" aria-label="開始 10 以內的分：分一分快手王">
-            <span class="mode-icon" aria-hidden="true">🍪↘</span>
+            <span class="mode-icon" aria-hidden="true">
+              <span class="math-orb cookie"></span>
+              <span class="math-operator minus">−</span>
+              <span class="math-orb cookie-piece"></span>
+            </span>
             <h2>分一分快手王</h2>
             <p>看到「全部」和其中一部分，找出另一部分。</p>
             <span class="mode-go">玩【10 以內的分】→</span>
           </button>
           <button class="mode-card combine" data-mode="combine" aria-label="開始 10 以內的合：合起來快答王">
-            <span class="mode-icon" aria-hidden="true">🔵＋🟠</span>
+            <span class="mode-icon" aria-hidden="true">
+              <span class="math-orb blue"></span>
+              <span class="math-operator plus">+</span>
+              <span class="math-orb orange"></span>
+            </span>
             <h2>合起來快答王</h2>
             <p>看到兩部分，找出合起來的「全部」。</p>
             <span class="mode-go">玩【10 以內的合】→</span>
