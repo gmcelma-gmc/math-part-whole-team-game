@@ -347,6 +347,87 @@
     .feedback.good { color: var(--jade-dark); background: #e8fff5; }
     .feedback.try { color: var(--red-dark); background: #fff0eb; }
 
+    .stage-banner {
+      position: relative;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 auto 7px;
+      padding: 7px 12px;
+      border: 3px solid var(--hall-dark, var(--ink));
+      border-radius: 999px;
+      color: var(--hall-dark, var(--ink));
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 4px 0 color-mix(in srgb, var(--hall-dark, var(--ink)) 23%, transparent);
+      font-weight: 1000;
+    }
+    .stage-icon { font-size: 1.4rem; }
+    .rank-badge { padding: 3px 9px; border-radius: 999px; color: #fff; background: var(--rank-color, #8896a6); font-size: .82rem; }
+    .scene-landmark { position: absolute; z-index: 0; right: 6%; top: 92px; font-size: 6.5rem; opacity: .9; filter: drop-shadow(0 8px 0 rgba(23,54,93,.12)); pointer-events: none; }
+
+    /* 四館各有自己的遊戲世界 */
+    .game-view[data-hall="within5"] { --hall-dark: #2f8f69; }
+    .game-view[data-hall="within5"] .arena {
+      background: radial-gradient(ellipse at 17% 15%, rgba(255,255,255,.9) 0 7%, transparent 7.3%), linear-gradient(180deg, #bdeaff 0 49%, #9edb91 49% 53%, #f5d79d 53% 100%);
+    }
+    .game-view[data-hall="within5"] .problem-card { border-radius: 38px; }
+
+    .game-view[data-hall="within9"] { --hall-dark: #176f59; }
+    .game-view[data-hall="within9"] .arena {
+      background:
+        repeating-linear-gradient(90deg, transparent 0 10%, rgba(34,132,91,.16) 10.3% 11.2%, transparent 11.5% 20%),
+        linear-gradient(180deg, #d9faea 0 48%, #69bd7a 48% 53%, #d4bb7e 53% 100%);
+    }
+    .game-view[data-hall="within9"] .arena::before { width: 88px; height: 88px; background: #c7f0c3; box-shadow: 0 0 0 13px rgba(255,255,255,.24); }
+    .game-view[data-hall="within9"] .problem-card { border-color: #d7f6df; box-shadow: 0 10px 0 rgba(16,87,66,.20), inset 0 0 0 3px rgba(53,184,154,.20); }
+    .game-view[data-hall="within9"] .answer-btn { border-radius: 23px; transform: rotate(-2deg); }
+    .game-view[data-hall="within9"] .answer-btn:nth-child(even) { transform: rotate(2deg); }
+    .game-view[data-hall="within9"] .answer-btn:hover { transform: translateY(-4px) rotate(0); }
+
+    .game-view[data-hall="make10"] { --hall-dark: #5b4bb2; }
+    .game-view[data-hall="make10"] .arena {
+      color: #fff;
+      background:
+        radial-gradient(circle at 12% 17%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 30% 9%, #ffe07b 0 3px, transparent 4px),
+        radial-gradient(circle at 74% 20%, #fff 0 2px, transparent 3px),
+        radial-gradient(circle at 87% 11%, #b5d8ff 0 3px, transparent 4px),
+        linear-gradient(180deg, #353270 0 50%, #6252a8 50% 54%, #a797d8 54% 100%);
+    }
+    .game-view[data-hall="make10"] .arena::before { background: #fff1a6; box-shadow: 0 0 0 13px rgba(255,241,166,.12); }
+    .game-view[data-hall="make10"] .arena::after { background: repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 3px, transparent 3px 58px), #8f80c4; border-top-color: rgba(255,255,255,.22); }
+    .game-view[data-hall="make10"] .scene-cloud { display: none; }
+    .game-view[data-hall="make10"] .problem-card { border-color: #cabfff; box-shadow: 0 10px 0 rgba(24,22,73,.32), inset 0 0 0 3px rgba(142,112,216,.22); }
+    .game-view[data-hall="make10"] .answer-label { color: #fff; background: rgba(37,31,96,.72); }
+    .game-view[data-hall="make10"] .answer-btn { border-radius: 48% 48% 28% 28%; box-shadow: 0 8px 0 #252052, 0 12px 0 rgba(10,8,39,.26); }
+    .game-view[data-hall="make10"] .answer-btn::before { left: 30%; top: -9px; width: 40%; height: 9px; border-radius: 5px; background: #ffe36c; }
+    .game-view[data-hall="make10"] .answer-btn::after { left: 39%; right: auto; top: auto; bottom: -11px; width: 22%; height: 11px; border-radius: 0 0 8px 8px; background: #ffe36c; }
+
+    .game-view[data-hall="within10"] { --hall-dark: #a4343b; }
+    .game-view[data-hall="within10"] .arena {
+      background:
+        linear-gradient(105deg, rgba(181,45,54,.88) 0 13%, transparent 13.3% 86.7%, rgba(181,45,54,.88) 87% 100%),
+        linear-gradient(180deg, #ffe6bb 0 50%, #d75858 50% 54%, #f4c66d 54% 100%);
+    }
+    .game-view[data-hall="within10"] .arena::before { background: #fff0a0; box-shadow: 0 0 0 14px rgba(255,255,255,.28); }
+    .game-view[data-hall="within10"] .arena::after { background: repeating-linear-gradient(90deg, rgba(139,72,18,.12) 0 3px, transparent 3px 58px), #efc76f; border-top-color: rgba(130,54,21,.25); }
+    .game-view[data-hall="within10"] .scene-cloud { display: none; }
+    .game-view[data-hall="within10"] .problem-card { border-color: #ffe27d; box-shadow: 0 10px 0 rgba(123,41,36,.25), inset 0 0 0 3px rgba(244,91,78,.18); }
+    .game-view[data-hall="within10"] .answer-btn { border-radius: 22px 22px 44px 44px; }
+
+    /* 三階腰帶讓同一館也有明顯升級感 */
+    .game-view[data-level="beginner"] { --rank-color: #8c97a1; --belt-color: #fff; }
+    .game-view[data-level="advanced"] { --rank-color: #377bd4; --belt-color: #4b86e8; }
+    .game-view[data-level="challenge"] { --rank-color: #d83f45; --belt-color: #e94b4b; }
+    .game-view[data-level="advanced"] .problem-card { outline: 4px solid rgba(75,134,232,.24); outline-offset: 3px; }
+    .game-view[data-level="advanced"] .progress-bar { background: repeating-linear-gradient(45deg, #3f7fd5 0 13px, #79abec 13px 26px); }
+    .game-view[data-level="challenge"] .problem-card { outline: 5px solid rgba(255,210,72,.66); outline-offset: 3px; }
+    .game-view[data-level="challenge"] .progress-bar { background: repeating-linear-gradient(45deg, #ef4b50 0 13px, #ffc94a 13px 26px); }
+    .game-view[data-level="challenge"] .stage-banner { animation: rankArrival .65s ease both; }
+    .game-view[data-level="challenge"] .mode-tag { color: #fff; background: #e34d50; box-shadow: 0 3px 0 #a82930; }
+    .coach-belt { background: var(--belt-color, var(--red)); }
+
     .result-panel { text-align: center; }
     .result-icon { font-size: 5rem; animation: resultBounce .8s ease both; }
     .result-panel h2 { margin: 3px 0; font-size: clamp(2rem, 5vw, 3.4rem); }
@@ -372,6 +453,7 @@
     @keyframes coachCheer { 25% { transform: translateY(-11px) rotate(-8deg); } 55% { transform: translateY(-4px) rotate(8deg); } }
     @keyframes hintReveal { from { opacity: 0; transform: translateY(-8px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes hintNudge { 0%,78%,100% { transform: translateY(0); } 84% { transform: translateY(-4px) rotate(-1deg); } 90% { transform: translateY(0) rotate(1deg); } }
+    @keyframes rankArrival { from { opacity: 0; transform: translateY(-12px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
     @media (max-width: 900px) {
       .hall-grid { grid-template-columns: repeat(2, 1fr); }
@@ -399,6 +481,8 @@
       .coach-bubble { padding: 9px 12px; font-size: .88rem; }
       .problem-card { width: 98%; padding-inline: 8px; }
       .problem-card::before, .problem-card::after { display: none; }
+      .stage-banner { font-size: .84rem; }
+      .scene-landmark { right: 2%; top: 108px; font-size: 4.2rem; opacity: .55; }
       .question { margin-top: 8px; }
       .number-bond { transform: scale(.9); margin: -8px auto; }
       .answers { grid-template-columns: repeat(2, 96px); gap: 15px 28px; }
@@ -458,6 +542,8 @@
         <div class="arena">
           <span class="scene-cloud cloud-one" aria-hidden="true"></span>
           <span class="scene-cloud cloud-two" aria-hidden="true"></span>
+          <div id="sceneLandmark" class="scene-landmark" aria-hidden="true">🌈</div>
+          <div class="stage-banner"><span id="stageIcon" class="stage-icon">🌈</span><strong id="stageName">彩虹小原野</strong><span id="rankBadge" class="rank-badge">白帶</span></div>
           <div id="timerRow" class="timer-row" hidden>
             <div class="timer-track"><div id="timerBar" class="timer-bar"></div></div>
             <span id="timerText" class="timer-text"></span>
@@ -507,16 +593,16 @@
       "use strict";
 
       const HALLS = {
-        within5: { name: "五寶入門館", short: "5以內", icon: "🖐️", desc: "看圖練習5以內的分與合", max: 5, bg: "#fff0c4" },
-        within9: { name: "九數修練館", short: "9以內", icon: "🧩", desc: "找出9以內的部分和全部", max: 9, bg: "#dff6ed" },
-        make10: { name: "湊十大師館", short: "10的合成", icon: "🔟", desc: "快速找出合起來是10的數", max: 10, bg: "#e3edff" },
-        within10: { name: "十內綜合館", short: "10以內", icon: "🏆", desc: "分與合混合出題，全面挑戰", max: 10, bg: "#f0e7ff" }
+        within5: { name: "五寶入門館", short: "5以內", icon: "🖐️", desc: "看圖練習5以內的分與合", max: 5, bg: "#fff0c4", stage: "彩虹小原野", scene: "🌈" },
+        within9: { name: "九數修練館", short: "9以內", icon: "🧩", desc: "找出9以內的部分和全部", max: 9, bg: "#dff6ed", stage: "翠竹修練場", scene: "🎋" },
+        make10: { name: "湊十大師館", short: "10的合成", icon: "🔟", desc: "快速找出合起來是10的數", max: 10, bg: "#e3edff", stage: "十星觀測台", scene: "🔭" },
+        within10: { name: "十內綜合館", short: "10以內", icon: "🏆", desc: "分與合混合出題，全面挑戰", max: 10, bg: "#f0e7ff", stage: "冠軍大武台", scene: "🏆" }
       };
 
       const LEVELS = {
-        beginner: { name: "初級", title: "安心練功", desc: "不限時間，想不到再請師父給圖像提示。", color: "#35b89a", limit: 0 },
-        advanced: { name: "進階", title: "限時修練", desc: "每題10秒，可使用一次圖像提示。", color: "#72a5f2", limit: 10 },
-        challenge: { name: "挑戰", title: "數字快攻", desc: "不使用提示，每題7秒，挑戰昨日的自己。", color: "#f45b4e", limit: 7 }
+        beginner: { name: "初級", rank: "白帶", title: "安心練功", desc: "不限時間，想不到再請師父給圖像提示。", coach: "先看清楚分合圖，再敲答案鼓！", color: "#35b89a", limit: 0 },
+        advanced: { name: "進階", rank: "藍帶", title: "限時修練", desc: "每題10秒，可使用一次圖像提示。", coach: "藍帶修練開始，穩穩想、快快答！", color: "#72a5f2", limit: 10 },
+        challenge: { name: "挑戰", rank: "紅帶", title: "數字快攻", desc: "不使用提示，每題7秒，挑戰昨日的自己。", coach: "紅帶挑戰！相信自己的數感！", color: "#f45b4e", limit: 7 }
       };
 
       const views = ["menuView", "levelView", "gameView", "resultView"];
@@ -559,7 +645,7 @@
           const record = getRecord(key, levelKey);
           const stars = record ? `${"★".repeat(record.stars)}${"☆".repeat(3 - record.stars)}` : "☆☆☆";
           return `<button class="level-card" type="button" data-level="${levelKey}" style="--level-color:${level.color}">
-            <span class="level-badge">${level.name}</span><h3>${level.title}</h3><p>${level.desc}</p><div class="stars">${stars}</div>
+            <span class="level-badge">${level.name}・${level.rank}</span><h3>${level.title}</h3><p>${level.desc}</p><div class="stars">${stars}</div>
           </button>`;
         }).join("");
         document.querySelectorAll("[data-level]").forEach(btn => btn.addEventListener("click", () => startGame(btn.dataset.level)));
@@ -601,10 +687,18 @@
 
       function startGame(levelKey) {
         state.level = levelKey;
+        const hall = HALLS[state.hall];
+        const level = LEVELS[levelKey];
         state.queue = Array.from({ length: 10 }, () => makeQuestion(state.hall, levelKey));
         state.index = 0; state.correct = 0; state.firstTryCorrect = 0; state.streak = 0;
         state.bestStreak = 0; state.times = []; state.wrongFacts = new Map(); state.hintUsed = false;
-        el("gameTitle").textContent = `${HALLS[state.hall].name}・${LEVELS[levelKey].name}`;
+        el("gameView").dataset.hall = state.hall;
+        el("gameView").dataset.level = levelKey;
+        el("gameTitle").textContent = `${hall.icon} ${hall.name}・${level.name}`;
+        el("stageIcon").textContent = hall.scene;
+        el("stageName").textContent = hall.stage;
+        el("sceneLandmark").textContent = hall.scene;
+        el("rankBadge").textContent = level.rank;
         const record = getRecord(state.hall, levelKey);
         el("shadowText").textContent = record ? `昨日的我：平均 ${record.avg.toFixed(1)} 秒・${record.accuracy}%` : "第一次練功，留下你的最佳紀錄吧！";
         el("hintBtn").hidden = levelKey === "challenge";
@@ -625,7 +719,7 @@
         const q = state.queue[state.index];
         const level = LEVELS[state.level];
         el("coachMascot").className = "coach-mascot";
-        el("coachBubble").textContent = q.review ? "這題再挑戰一次，你一定更熟了！" : "看清楚分合圖，再敲答案鼓！";
+        el("coachBubble").textContent = q.review ? "這題再挑戰一次，你一定更熟了！" : level.coach;
         const reviewLabel = q.review ? "・錯題再挑戰" : "";
         const prompt = q.type === "missing" ? "找出另一部分" : q.type === "make10" ? "還要多少才會合成10" : "合起來是多少";
         el("modeTag").textContent = `${prompt}${reviewLabel}`;
