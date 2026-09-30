@@ -1120,7 +1120,8 @@
         const baseCount = 10;
         const accuracy = Math.round(state.firstTryCorrect / baseCount * 100);
         const avg = state.times.length ? state.times.reduce((a,b) => a + b, 0) / state.times.length : 0;
-        const stars = accuracy >= 90 && (state.level === "beginner" || avg <= (LEVELS[state.level].limit * .72)) ? 3 : accuracy >= 90 ? 2 : accuracy >= 80 ? 1 : 0;
+        const masteryTime = state.level === "advanced" ? 2.4 : LEVELS[state.level].limit;
+        const stars = accuracy >= 90 && (state.level === "beginner" || avg <= (masteryTime * .72)) ? 3 : accuracy >= 90 ? 2 : accuracy >= 80 ? 1 : 0;
         const old = getRecord(state.hall, state.level);
         const record = { stars: Math.max(stars, old?.stars || 0), accuracy: Math.max(accuracy, old?.accuracy || 0), avg: old?.avg ? Math.min(avg || old.avg, old.avg) : avg, date: Date.now() };
         localStorage.setItem(storageKey(state.hall, state.level), JSON.stringify(record));
