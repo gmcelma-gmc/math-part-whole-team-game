@@ -185,40 +185,95 @@
     .header-tools { display: flex; gap: 8px; }
     .progress-wrap { grid-column: 1 / -1; }
     .progress-labels { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--muted); font-size: .85rem; font-weight: 900; }
-    .progress-track { height: 17px; padding: 3px; border-radius: 999px; background: #dfe8ef; overflow: hidden; }
-    .progress-bar { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--jade), var(--gold)); transition: width .35s ease; }
+    .progress-track { height: 18px; padding: 3px; border: 2px solid #17365d; border-radius: 999px; background: #fff; overflow: hidden; box-shadow: 0 3px 0 rgba(23,54,93,.12); }
+    .progress-bar { position: relative; height: 100%; width: 0; border-radius: 999px; background: repeating-linear-gradient(45deg, #35b89a 0 13px, #68d5b7 13px 26px); transition: width .35s ease; }
 
     .arena {
       position: relative;
       margin-top: 14px;
-      min-height: 490px;
-      padding: clamp(20px, 4vw, 42px);
+      min-height: 620px;
+      padding: 18px clamp(16px, 3vw, 34px) 28px;
       border-radius: 27px;
       background:
-        linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
-        repeating-linear-gradient(0deg, #d2aa6e 0 4px, #f1d69e 4px 9px);
-      box-shadow: inset 0 0 0 3px rgba(23,54,93,.08);
+        radial-gradient(ellipse at 17% 15%, rgba(255,255,255,.9) 0 7%, transparent 7.3%),
+        radial-gradient(ellipse at 80% 19%, rgba(255,255,255,.82) 0 8%, transparent 8.3%),
+        linear-gradient(180deg, #bdeaff 0 49%, #9edb91 49% 53%, #f5d79d 53% 100%);
+      border: 4px solid #fff;
+      box-shadow: inset 0 0 0 3px rgba(23,54,93,.09), 0 10px 0 rgba(23,54,93,.10);
       text-align: center;
       overflow: hidden;
     }
     .arena::before {
-      content: "練";
+      content: "";
       position: absolute;
-      right: -5px;
-      bottom: -60px;
-      color: rgba(244,91,78,.07);
-      font-family: "DFKai-SB", serif;
-      font-size: 18rem;
-      font-weight: 900;
-      transform: rotate(-8deg);
+      right: 34px;
+      top: 32px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #ffe36c;
+      box-shadow: 0 0 0 12px rgba(255,227,108,.2);
       pointer-events: none;
     }
-    .timer-row { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 10px; min-height: 26px; }
+    .arena::after {
+      content: "";
+      position: absolute;
+      left: -4%;
+      right: -4%;
+      bottom: -58px;
+      height: 170px;
+      border-radius: 50% 50% 0 0;
+      background: repeating-linear-gradient(90deg, rgba(159,105,43,.10) 0 3px, transparent 3px 58px), #f7dfad;
+      border-top: 5px solid rgba(159,105,43,.17);
+      pointer-events: none;
+    }
+    .scene-cloud { position: absolute; z-index: 0; width: 94px; height: 26px; border-radius: 999px; background: rgba(255,255,255,.88); pointer-events: none; }
+    .scene-cloud::before, .scene-cloud::after { content: ""; position: absolute; bottom: 0; border-radius: 50%; background: inherit; }
+    .scene-cloud::before { left: 15px; width: 38px; height: 38px; }
+    .scene-cloud::after { right: 14px; width: 48px; height: 48px; }
+    .cloud-one { left: 7%; top: 74px; transform: scale(.78); }
+    .cloud-two { right: 13%; top: 125px; transform: scale(.62); }
+    .timer-row { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; gap: 10px; min-height: 26px; }
     .timer-track { width: min(300px, 55vw); height: 10px; background: #e2e7eb; border-radius: 999px; overflow: hidden; }
     .timer-bar { width: 100%; height: 100%; background: var(--sky); transform-origin: left; }
     .timer-text { min-width: 55px; font-weight: 900; }
-    .mode-tag { display: inline-block; margin-top: 12px; padding: 6px 13px; border-radius: 999px; background: #fff1bd; color: #754b00; font-weight: 900; }
-    .question { position: relative; z-index: 1; min-height: 184px; margin: 14px 0 4px; display: grid; place-items: center; }
+    .coach-strip { position: relative; z-index: 3; display: flex; justify-content: center; align-items: center; gap: 12px; width: min(560px, 94%); margin: 8px auto 12px; }
+    .coach-mascot {
+      position: relative;
+      flex: 0 0 70px;
+      width: 70px;
+      height: 65px;
+      border: 4px solid var(--ink);
+      border-radius: 48% 48% 42% 42%;
+      background: #ffd45f;
+      box-shadow: 0 6px 0 rgba(23,54,93,.16);
+      transition: transform .2s ease;
+    }
+    .coach-mascot::before, .coach-mascot::after { content: ""; position: absolute; top: 22px; width: 7px; height: 9px; border-radius: 50%; background: var(--ink); }
+    .coach-mascot::before { left: 19px; }
+    .coach-mascot::after { right: 19px; }
+    .coach-mouth { position: absolute; left: 27px; top: 36px; width: 13px; height: 8px; border-bottom: 4px solid var(--ink); border-radius: 50%; }
+    .coach-belt { position: absolute; left: -4px; right: -4px; bottom: 8px; height: 11px; border: 2px solid var(--ink); background: var(--red); }
+    .coach-mascot.cheer { animation: coachCheer .55s ease; }
+    .coach-mascot.worried { transform: rotate(-6deg); background: #ffba7a; }
+    .coach-bubble { position: relative; padding: 10px 16px; border: 3px solid var(--ink); border-radius: 18px; background: #fff; color: var(--ink); font-weight: 900; box-shadow: 0 5px 0 rgba(23,54,93,.12); }
+    .coach-bubble::before { content: ""; position: absolute; left: -10px; top: 20px; width: 15px; height: 15px; border-left: 3px solid var(--ink); border-bottom: 3px solid var(--ink); background: #fff; transform: rotate(45deg); }
+    .problem-card {
+      position: relative;
+      z-index: 2;
+      width: min(570px, 96%);
+      margin: 0 auto;
+      padding: 15px 18px 10px;
+      border: 4px solid rgba(255,255,255,.95);
+      border-radius: 30px;
+      background: rgba(255,253,245,.96);
+      box-shadow: 0 10px 0 rgba(23,54,93,.13), inset 0 0 0 3px rgba(244,166,42,.14);
+    }
+    .problem-card::before, .problem-card::after { content: "★"; position: absolute; top: 18px; color: #f7c948; font-size: 1.45rem; }
+    .problem-card::before { left: 22px; }
+    .problem-card::after { right: 22px; }
+    .mode-tag { display: inline-block; margin-top: 0; padding: 7px 15px; border-radius: 999px; background: #ffe489; color: #704600; font-weight: 1000; box-shadow: 0 3px 0 #eabf43; }
+    .question { position: relative; z-index: 1; min-height: 180px; margin: 12px 0 0; display: grid; place-items: center; user-select: none; }
     .number-bond { position: relative; width: 290px; height: 180px; margin: 0 auto; }
     .bond-box {
       position: absolute;
@@ -230,12 +285,12 @@
       border: 4px solid #bec5cb;
       border-radius: 18px;
       color: #4eb7ca;
-      background: #fff;
+      background: linear-gradient(160deg, #fff 0 72%, #eaf7fb 72%);
       font-family: "Comic Sans MS", "Microsoft JhengHei", sans-serif;
       font-size: 2.55rem;
       font-weight: 800;
       line-height: 1;
-      box-shadow: 0 4px 0 rgba(23,54,93,.08);
+      box-shadow: 0 6px 0 rgba(23,54,93,.12);
     }
     .bond-box.blank {
       border-color: #f4a62a;
@@ -251,8 +306,8 @@
     .bond-bottom-right { right: 18px; bottom: 0; }
     .bond-bottom-center { left: 99px; bottom: 0; }
     .bond-lines { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; overflow: visible; }
-    .bond-lines line { stroke: #c3c9ce; stroke-width: 4; stroke-linecap: round; }
-    .visual-aid { position: relative; z-index: 1; min-height: 84px; display: grid; place-items: center; margin: 5px auto 15px; }
+    .bond-lines line { stroke: #9caebe; stroke-width: 5; stroke-linecap: round; }
+    .visual-aid { position: relative; z-index: 1; display: grid; place-items: center; width: fit-content; margin: 0 auto 10px; padding: 9px 13px; border: 3px dashed #9eb4c8; border-radius: 19px; background: #f4fbff; animation: hintReveal .32s ease both; }
     .dot-groups { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
     .dot-box { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; max-width: 170px; padding: 11px; border: 3px dashed rgba(23,54,93,.25); border-radius: 18px; background: rgba(255,255,255,.75); }
     .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--dot-color, var(--sky)); box-shadow: inset -4px -5px 0 rgba(23,54,93,.14); }
@@ -261,29 +316,36 @@
     .ten-cell { width: 30px; height: 30px; border: 2px solid #aac0d4; border-radius: 5px; }
     .ten-cell.filled { background: var(--red); border-color: var(--red-dark); box-shadow: inset -4px -4px 0 rgba(117,24,20,.18); }
 
-    .answers { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(80px, 130px)); justify-content: center; gap: clamp(9px, 2vw, 15px); margin-top: 11px; }
+    .answer-label { position: relative; z-index: 2; display: inline-block; margin: 17px 0 8px; padding: 5px 13px; border-radius: 999px; color: #5d4214; background: rgba(255,255,255,.77); font-size: .92rem; font-weight: 900; }
+    .answers { position: relative; z-index: 2; display: grid; grid-template-columns: repeat(4, 104px); justify-content: center; gap: clamp(12px, 2.2vw, 22px); margin-top: 0; }
     .answer-btn {
-      min-height: 78px;
+      position: relative;
+      width: 104px;
+      height: 92px;
       border: 4px solid var(--ink);
-      border-radius: 24px 24px 18px 18px;
+      border-radius: 50%;
       color: var(--ink);
-      background: var(--balloon);
+      background: radial-gradient(circle at 35% 28%, #fff8 0 7%, transparent 8%), var(--balloon);
       font-size: clamp(1.8rem, 5vw, 2.8rem);
       font-weight: 1000;
-      box-shadow: 0 8px 0 rgba(23,54,93,.20);
+      box-shadow: 0 8px 0 #17365d, 0 12px 0 rgba(23,54,93,.15);
       cursor: pointer;
       transition: transform .12s ease, filter .12s ease;
     }
+    .answer-btn::before, .answer-btn::after { content: ""; position: absolute; top: 42%; width: 7px; height: 7px; border-radius: 50%; background: rgba(23,54,93,.35); }
+    .answer-btn::before { left: 7px; }
+    .answer-btn::after { right: 7px; }
     .answer-btn:hover { transform: translateY(-4px); filter: brightness(1.04); }
-    .answer-btn:active { transform: translateY(4px); box-shadow: 0 3px 0 rgba(23,54,93,.20); }
+    .answer-btn:active { transform: translateY(5px); box-shadow: 0 3px 0 #17365d; }
     .answer-btn.correct { animation: correctPop .45s ease; background: #86e4b7; }
     .answer-btn.wrong { animation: shake .35s ease; background: #ffaaa4; }
-    .action-row { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 18px; }
-    .hint-btn { border: 0; border-radius: 999px; padding: 10px 17px; color: #744800; background: #fff0b0; font-weight: 900; cursor: pointer; }
-    .hint-btn:disabled { opacity: .45; cursor: default; }
-    .feedback { min-height: 32px; margin: 0; font-size: 1.15rem; font-weight: 1000; }
-    .feedback.good { color: var(--jade-dark); }
-    .feedback.try { color: var(--red-dark); }
+    .action-row { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; gap: 13px; margin-top: 18px; }
+    .hint-btn { border: 3px solid #d29313; border-radius: 999px; padding: 10px 18px; color: #744800; background: #fff0a8; font-weight: 1000; box-shadow: 0 5px 0 #d29313; cursor: pointer; animation: hintNudge 2.8s ease-in-out infinite; }
+    .hint-btn:disabled { opacity: .45; cursor: default; animation: none; }
+    .feedback { min-height: 32px; margin: 0; padding: 7px 13px; border-radius: 13px; background: rgba(255,255,255,.85); font-size: 1.15rem; font-weight: 1000; }
+    .feedback:empty { display: none; }
+    .feedback.good { color: var(--jade-dark); background: #e8fff5; }
+    .feedback.try { color: var(--red-dark); background: #fff0eb; }
 
     .result-panel { text-align: center; }
     .result-icon { font-size: 5rem; animation: resultBounce .8s ease both; }
@@ -307,6 +369,9 @@
     @keyframes correctPop { 50% { transform: scale(1.16) rotate(3deg); } }
     @keyframes shake { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-5px); } }
     @keyframes resultBounce { 0% { transform: scale(.4) rotate(-15deg); opacity: 0; } 65% { transform: scale(1.16) rotate(5deg); } 100% { transform: scale(1); opacity: 1; } }
+    @keyframes coachCheer { 25% { transform: translateY(-11px) rotate(-8deg); } 55% { transform: translateY(-4px) rotate(8deg); } }
+    @keyframes hintReveal { from { opacity: 0; transform: translateY(-8px) scale(.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes hintNudge { 0%,78%,100% { transform: translateY(0); } 84% { transform: translateY(-4px) rotate(-1deg); } 90% { transform: translateY(0) rotate(1deg); } }
 
     @media (max-width: 900px) {
       .hall-grid { grid-template-columns: repeat(2, 1fr); }
@@ -325,11 +390,20 @@
       .record-chip { display: none; }
       .game-header { grid-template-columns: auto 1fr; }
       .header-tools { grid-column: 1 / -1; justify-content: flex-end; }
-      .arena { min-height: 500px; padding: 17px 10px; }
-      .question { margin-top: 10px; }
+      .arena { min-height: 650px; padding: 13px 8px 24px; }
+      .coach-strip { width: 96%; gap: 8px; }
+      .coach-mascot { flex-basis: 58px; width: 58px; height: 55px; }
+      .coach-mascot::before { left: 15px; top: 18px; }
+      .coach-mascot::after { right: 15px; top: 18px; }
+      .coach-mouth { left: 22px; top: 31px; }
+      .coach-bubble { padding: 9px 12px; font-size: .88rem; }
+      .problem-card { width: 98%; padding-inline: 8px; }
+      .problem-card::before, .problem-card::after { display: none; }
+      .question { margin-top: 8px; }
       .number-bond { transform: scale(.9); margin: -8px auto; }
-      .answers { grid-template-columns: repeat(2, minmax(100px, 145px)); }
-      .answer-btn { min-height: 68px; }
+      .answers { grid-template-columns: repeat(2, 96px); gap: 15px 28px; }
+      .answer-btn { width: 96px; height: 82px; }
+      .action-row { flex-direction: column; margin-top: 15px; }
       .result-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -382,13 +456,22 @@
         </header>
 
         <div class="arena">
+          <span class="scene-cloud cloud-one" aria-hidden="true"></span>
+          <span class="scene-cloud cloud-two" aria-hidden="true"></span>
           <div id="timerRow" class="timer-row" hidden>
             <div class="timer-track"><div id="timerBar" class="timer-bar"></div></div>
             <span id="timerText" class="timer-text"></span>
           </div>
-          <span id="modeTag" class="mode-tag"></span>
-          <div id="question" class="question" aria-live="polite"></div>
-          <div id="visualAid" class="visual-aid"></div>
+          <div class="coach-strip">
+            <div id="coachMascot" class="coach-mascot" aria-hidden="true"><span class="coach-mouth"></span><span class="coach-belt"></span></div>
+            <div id="coachBubble" class="coach-bubble">看清楚分合圖，再敲答案鼓！</div>
+          </div>
+          <div class="problem-card">
+            <span id="modeTag" class="mode-tag"></span>
+            <div id="question" class="question" aria-live="polite"></div>
+            <div id="visualAid" class="visual-aid" hidden></div>
+          </div>
+          <div class="answer-label">🥁 敲一個答案鼓</div>
           <div id="answers" class="answers"></div>
           <div class="action-row">
             <button id="hintBtn" class="hint-btn" type="button">💡 師父提示（1次）</button>
@@ -431,9 +514,9 @@
       };
 
       const LEVELS = {
-        beginner: { name: "初級", title: "看圖練功", desc: "有圓點或十格框幫忙，不限時間。", color: "#35b89a", limit: 0, visualChance: 1 },
-        advanced: { name: "進階", title: "半圖半數", desc: "有時有圖、有時只有數字，每題10秒。", color: "#72a5f2", limit: 10, visualChance: .48 },
-        challenge: { name: "挑戰", title: "數字快攻", desc: "純數字混合題，每題7秒，挑戰昨日的自己。", color: "#f45b4e", limit: 7, visualChance: 0 }
+        beginner: { name: "初級", title: "安心練功", desc: "不限時間，想不到再請師父給圖像提示。", color: "#35b89a", limit: 0 },
+        advanced: { name: "進階", title: "限時修練", desc: "每題10秒，可使用一次圖像提示。", color: "#72a5f2", limit: 10 },
+        challenge: { name: "挑戰", title: "數字快攻", desc: "不使用提示，每題7秒，挑戰昨日的自己。", color: "#f45b4e", limit: 7 }
       };
 
       const views = ["menuView", "levelView", "gameView", "resultView"];
@@ -541,11 +624,13 @@
         el("feedback").className = "feedback";
         const q = state.queue[state.index];
         const level = LEVELS[state.level];
+        el("coachMascot").className = "coach-mascot";
+        el("coachBubble").textContent = q.review ? "這題再挑戰一次，你一定更熟了！" : "看清楚分合圖，再敲答案鼓！";
         const reviewLabel = q.review ? "・錯題再挑戰" : "";
         const prompt = q.type === "missing" ? "找出另一部分" : q.type === "make10" ? "還要多少才會合成10" : "合起來是多少";
         el("modeTag").textContent = `${prompt}${reviewLabel}`;
         el("question").innerHTML = renderNumberBond(q);
-        renderVisual(q, Math.random() < level.visualChance);
+        renderVisual(q, false);
         const colors = ["#ffd166", "#8fdcc8", "#91b7f4", "#d6b1ef"];
         el("answers").innerHTML = q.choices.map((choice, i) => `<button class="answer-btn" type="button" data-answer="${choice}" style="--balloon:${colors[i]}">${choice}</button>`).join("");
         document.querySelectorAll("[data-answer]").forEach(btn => btn.addEventListener("click", () => answerQuestion(Number(btn.dataset.answer), btn)));
@@ -579,7 +664,8 @@
       function renderVisual(q, show) {
         const box = el("visualAid");
         box.innerHTML = "";
-        if (!show) { box.innerHTML = `<span style="color:#75889b;font-weight:800">先在心裡想一想</span>`; return; }
+        box.hidden = !show;
+        if (!show) return;
         if (state.hall === "make10") {
           box.innerHTML = `<div class="ten-frame" aria-label="十格框">${Array.from({ length: 10 }, (_, i) => `<span class="ten-cell ${i < q.a ? "filled" : ""}"></span>`).join("")}</div>`;
           return;
@@ -603,6 +689,8 @@
           if (!state.secondChance && !q.review) { state.firstTryCorrect++; state.times.push(elapsed); }
           el("feedback").textContent = state.streak >= 3 ? `太棒了！${state.streak} 連斬！` : "答對了！功力上升！";
           el("feedback").className = "feedback good";
+          el("coachMascot").className = "coach-mascot cheer";
+          el("coachBubble").textContent = state.streak >= 3 ? `${state.streak}連斬！你越來越厲害了！` : "答對了！漂亮的一招！";
           playEffect("correct");
           setTimeout(nextQuestion, 720);
         } else {
@@ -615,9 +703,10 @@
             const reviewAt = Math.min(state.index + randomInt(2, 3), state.queue.length);
             state.queue.splice(reviewAt, 0, makeQuestion(state.hall, state.level, q));
           }
-          el("feedback").textContent = timedOut ? "時間到！看看提示，再試一次。" : "差一點！看看圖，再試一次。";
+          el("feedback").textContent = timedOut ? "時間到！再想想，或按師父提示。" : "差一點！再想想，或按師父提示。";
           el("feedback").className = "feedback try";
-          renderVisual(q, true);
+          el("coachMascot").className = "coach-mascot worried";
+          el("coachBubble").textContent = "沒關係，換個答案試試看！";
           playEffect("wrong");
           setTimeout(() => button?.classList.remove("wrong"), 380);
         }
@@ -651,6 +740,7 @@
         el("hintBtn").disabled = true;
         el("hintBtn").textContent = "💡 提示已使用";
         renderVisual(state.queue[state.index], true);
+        el("coachBubble").textContent = "看著圓點或十格框，再想一次！";
         toast("師父把圖像提示請出來了！");
       }
 
