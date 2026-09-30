@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17365d">
+  <title>數感練功坊｜個人熟練挑戰</title>
+  <style>
+    :root {
+      --ink: #17365d;
+      --paper: #fff9e9;
+      --rice: #fffdf5;
+      --red: #f45b4e;
+      --red-dark: #c83f38;
+      --jade: #35b89a;
+      --jade-dark: #16836e;
+      --gold: #f7c948;
+      --sky: #72a5f2;
+      --violet: #8e70d8;
+      --muted: #62758a;
+      --shadow: 0 18px 42px rgba(23, 54, 93, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(247,201,72,.30) 0 4px, transparent 5px),
+        radial-gradient(circle at 86% 78%, rgba(53,184,154,.22) 0 5px, transparent 6px),
+        linear-gradient(150deg, #dff4ff 0%, #fff8df 52%, #e2f7ee 100%);
+      overflow-x: hidden;
+    }
+    button { font: inherit; touch-action: manipulation; }
+    button:focus-visible { outline: 5px solid rgba(114,165,242,.55); outline-offset: 3px; }
+    [hidden] { display: none !important; }
+
+    .app { min-height: 100vh; padding: clamp(12px, 2vw, 24px); }
+    .view { min-height: calc(100vh - 48px); }
+    .menu-view { display: grid; place-items: center; }
+
+    .dojo-shell {
+      position: relative;
+      width: min(1180px, 100%);
+      padding: clamp(24px, 4vw, 52px);
+      background: rgba(255,253,245,.95);
+      border: 5px solid #fff;
+      border-radius: 36px;
+      box-shadow: var(--shadow), inset 0 0 0 2px rgba(23,54,93,.08);
+      overflow: hidden;
+    }
+    .dojo-shell::before, .dojo-shell::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 38px;
+      height: 100%;
+      background: repeating-linear-gradient(90deg, #efc67a 0 8px, #ffe4a7 8px 15px);
+      opacity: .5;
+    }
+    .dojo-shell::before { left: 0; }
+    .dojo-shell::after { right: 0; }
+
+    .hero { position: relative; z-index: 1; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 8px;
+      padding: 7px 15px;
+      border-radius: 999px;
+      color: #7b4b00;
+      background: #fff0b6;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+    h1 {
+      margin: 2px 0 8px;
+      font-family: "DFKai-SB", "BiauKai", "Microsoft JhengHei", sans-serif;
+      font-size: clamp(2.55rem, 6vw, 5.2rem);
+      line-height: 1;
+      letter-spacing: .05em;
+      color: var(--ink);
+      text-shadow: 0 5px 0 #fff, 0 8px 0 rgba(244,91,78,.18);
+    }
+    .hero p { margin: 12px auto 24px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.25rem); font-weight: 800; }
+
+    .mascot-row { display: flex; justify-content: center; align-items: flex-end; gap: 14px; margin: 10px 0 25px; }
+    .mascot {
+      position: relative;
+      width: 90px;
+      height: 78px;
+      border: 4px solid var(--ink);
+      border-radius: 48% 48% 42% 42%;
+      background: var(--gold);
+      box-shadow: 0 9px 0 rgba(23,54,93,.10);
+      animation: breathe 2.8s ease-in-out infinite;
+    }
+    .mascot::before, .mascot::after {
+      content: "";
+      position: absolute;
+      top: 29px;
+      width: 8px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+    .mascot::before { left: 25px; }
+    .mascot::after { right: 25px; }
+    .mascot-mouth { position: absolute; left: 35px; top: 44px; width: 15px; height: 9px; border-bottom: 4px solid var(--ink); border-radius: 50%; }
+    .belt { position: absolute; left: -4px; right: -4px; bottom: 13px; height: 13px; background: var(--red); border: 3px solid var(--ink); }
+    .belt::after { content: ""; position: absolute; left: 38px; top: -6px; width: 14px; height: 20px; background: var(--red-dark); border: 3px solid var(--ink); transform: rotate(8deg); }
+    .spark { font-size: 2rem; animation: twinkle 1.6s ease-in-out infinite alternate; }
+    .spark:nth-child(3) { animation-delay: .4s; }
+
+    .hall-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .hall-card {
+      position: relative;
+      min-height: 220px;
+      padding: 22px 18px 18px;
+      border: 3px solid rgba(23,54,93,.13);
+      border-radius: 25px;
+      color: var(--ink);
+      background: var(--card-bg);
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 9px 0 rgba(23,54,93,.09);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .hall-card:hover { transform: translateY(-5px) rotate(-.5deg); box-shadow: 0 14px 0 rgba(23,54,93,.09); }
+    .hall-card:active { transform: translateY(2px); box-shadow: 0 5px 0 rgba(23,54,93,.09); }
+    .hall-card h2 { margin: 8px 0 7px; font-size: clamp(1.2rem, 2vw, 1.55rem); }
+    .hall-card p { margin: 0; color: #4e6278; font-weight: 750; line-height: 1.5; }
+    .hall-icon { font-size: 2.8rem; filter: drop-shadow(0 4px 0 rgba(23,54,93,.12)); }
+    .record-chip { position: absolute; right: 12px; top: 12px; padding: 5px 9px; border-radius: 999px; background: rgba(255,255,255,.84); font-size: .78rem; font-weight: 900; }
+    .hall-arrow { position: absolute; right: 16px; bottom: 12px; font-size: 1.5rem; font-weight: 1000; }
+    .coming-next { position: relative; z-index: 1; margin: 22px auto 0; text-align: center; color: var(--muted); font-weight: 800; }
+
+    .level-view, .game-view, .result-view { display: grid; place-items: center; }
+    .panel {
+      width: min(980px, 100%);
+      background: rgba(255,253,245,.97);
+      border: 5px solid white;
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: clamp(20px, 4vw, 42px);
+    }
+    .topline { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+    .back-btn, .icon-btn {
+      border: 0;
+      border-radius: 15px;
+      color: var(--ink);
+      background: #e7f0ff;
+      padding: 10px 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .topline h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.5rem); }
+    .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .level-card {
+      min-height: 270px;
+      padding: 24px;
+      border: 4px solid var(--level-color);
+      border-radius: 25px;
+      background: white;
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 0 9px 0 color-mix(in srgb, var(--level-color) 22%, transparent);
+      cursor: pointer;
+      transition: transform .18s ease;
+    }
+    .level-card:hover { transform: translateY(-5px); }
+    .level-badge { display: inline-flex; padding: 7px 12px; border-radius: 999px; color: white; background: var(--level-color); font-weight: 1000; }
+    .level-card h3 { margin: 17px 0 7px; font-size: 1.45rem; }
+    .level-card p { color: var(--muted); font-weight: 750; line-height: 1.65; }
+    .stars { color: #e6a700; font-size: 1.45rem; letter-spacing: .1em; }
+
+    .game-panel { width: min(1060px, 100%); padding: clamp(13px, 2.5vw, 28px); }
+    .game-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px; }
+    .game-title { min-width: 0; }
+    .game-title strong { display: block; font-size: clamp(1rem, 2.4vw, 1.35rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .game-title span { color: var(--muted); font-size: .9rem; font-weight: 800; }
+    .header-tools { display: flex; gap: 8px; }
+    .progress-wrap { grid-column: 1 / -1; }
+    .progress-labels { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--muted); font-size: .85rem; font-weight: 900; }
+    .progress-track { height: 17px; padding: 3px; border-radius: 999px; background: #dfe8ef; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--jade), var(--gold)); transition: width .35s ease; }
+
+    .arena {
+      position: relative;
+      margin-top: 14px;
+      min-height: 490px;
+      padding: clamp(20px, 4vw, 42px);
+      border-radius: 27px;
+      background:
+        linear-gradient(rgba(255,255,255,.82), rgba(255,255,255,.82)),
+        repeating-linear-gradient(0deg, #d2aa6e 0 4px, #f1d69e 4px 9px);
+      box-shadow: inset 0 0 0 3px rgba(23,54,93,.08);
+      text-align: center;
+      overflow: hidden;
+    }
+    .arena::before {
+      content: "練";
+      position: absolute;
+      right: -5px;
+      bottom: -60px;
+      color: rgba(244,91,78,.07);
+      font-family: "DFKai-SB", serif;
+      font-size: 18rem;
+      font-weight: 900;
+      transform: rotate(-8deg);
+      pointer-events: none;
+    }
+    .timer-row { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 10px; min-height: 26px; }
+    .timer-track { width: min(300px, 55vw); height: 10px; background: #e2e7eb; border-radius: 999px; overflow: hidden; }
+    .timer-bar { width: 100%; height: 100%; background: var(--sky); transform-origin: left; }
+    .timer-text { min-width: 55px; font-weight: 900; }
+    .mode-tag { display: inline-block; margin-top: 12px; padding: 6px 13px; border-radius: 999px; background: #fff1bd; color: #754b00; font-weight: 900; }
+    .question { position: relative; z-index: 1; margin: 18px 0 8px; font-size: clamp(2.8rem, 8vw, 6rem); font-weight: 1000; letter-spacing: .03em; line-height: 1.1; }
+    .question .blank { display: inline-grid; place-items: center; min-width: 1.15em; color: var(--red); border-bottom: .12em solid var(--red); }
+    .visual-aid { position: relative; z-index: 1; min-height: 84px; display: grid; place-items: center; margin: 5px auto 15px; }
+    .dot-groups { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    .dot-box { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; max-width: 170px; padding: 11px; border: 3px dashed rgba(23,54,93,.25); border-radius: 18px; background: rgba(255,255,255,.75); }
+    .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--dot-color, var(--sky)); box-shadow: inset -4px -5px 0 rgba(23,54,93,.14); }
+    .visual-symbol { font-size: 2rem; font-weight: 1000; }
+    .ten-frame { display: grid; grid-template-columns: repeat(5, 30px); gap: 5px; padding: 8px; border: 4px solid var(--ink); border-radius: 10px; background: white; }
+    .ten-cell { width: 30px; height: 30px; border: 2px solid #aac0d4; border-radius: 5px; }
+    .ten-cell.filled { background: var(--red); border-color: var(--red-dark); box-shadow: inset -4px -4px 0 rgba(117,24,20,.18); }
+
+    .answers { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(80px, 130px)); justify-content: center; gap: clamp(9px, 2vw, 15px); margin-top: 11px; }
+    .answer-btn {
+      min-height: 78px;
+      border: 4px solid var(--ink);
+      border-radius: 24px 24px 18px 18px;
+      color: var(--ink);
+      background: var(--balloon);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 1000;
+      box-shadow: 0 8px 0 rgba(23,54,93,.20);
+      cursor: pointer;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .answer-btn:hover { transform: translateY(-4px); filter: brightness(1.04); }
+    .answer-btn:active { transform: translateY(4px); box-shadow: 0 3px 0 rgba(23,54,93,.20); }
+    .answer-btn.correct { animation: correctPop .45s ease; background: #86e4b7; }
+    .answer-btn.wrong { animation: shake .35s ease; background: #ffaaa4; }
+    .action-row { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 18px; }
+    .hint-btn { border: 0; border-radius: 999px; padding: 10px 17px; color: #744800; background: #fff0b0; font-weight: 900; cursor: pointer; }
+    .hint-btn:disabled { opacity: .45; cursor: default; }
+    .feedback { min-height: 32px; margin: 0; font-size: 1.15rem; font-weight: 1000; }
+    .feedback.good { color: var(--jade-dark); }
+    .feedback.try { color: var(--red-dark); }
+
+    .result-panel { text-align: center; }
+    .result-icon { font-size: 5rem; animation: resultBounce .8s ease both; }
+    .result-panel h2 { margin: 3px 0; font-size: clamp(2rem, 5vw, 3.4rem); }
+    .result-stars { color: #e9a700; font-size: clamp(2rem, 7vw, 4rem); letter-spacing: .12em; }
+    .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+    .result-stat { padding: 17px; border-radius: 20px; background: #eef5ff; }
+    .result-stat b { display: block; font-size: clamp(1.5rem, 4vw, 2.5rem); }
+    .result-stat span { color: var(--muted); font-weight: 800; }
+    .focus-box { padding: 16px; border-radius: 20px; background: #fff2c8; line-height: 1.6; font-weight: 800; }
+    .result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 11px; margin-top: 22px; }
+    .primary-btn, .secondary-btn { border: 0; border-radius: 17px; padding: 13px 21px; font-weight: 1000; cursor: pointer; }
+    .primary-btn { color: white; background: var(--red); box-shadow: 0 6px 0 var(--red-dark); }
+    .secondary-btn { color: var(--ink); background: #dfeaff; box-shadow: 0 6px 0 #b8c9e5; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; z-index: 20; transform: translate(-50%, 30px); opacity: 0; padding: 11px 18px; color: white; background: rgba(23,54,93,.94); border-radius: 999px; font-weight: 900; transition: .25s ease; pointer-events: none; }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+    @keyframes breathe { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
+    @keyframes twinkle { from { transform: scale(.8) rotate(-10deg); opacity: .5; } to { transform: scale(1.15) rotate(10deg); opacity: 1; } }
+    @keyframes correctPop { 50% { transform: scale(1.16) rotate(3deg); } }
+    @keyframes shake { 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-5px); } }
+    @keyframes resultBounce { 0% { transform: scale(.4) rotate(-15deg); opacity: 0; } 65% { transform: scale(1.16) rotate(5deg); } 100% { transform: scale(1); opacity: 1; } }
+
+    @media (max-width: 900px) {
+      .hall-grid { grid-template-columns: repeat(2, 1fr); }
+      .level-grid { grid-template-columns: 1fr; }
+      .level-card { min-height: auto; }
+    }
+    @media (max-width: 580px) {
+      .app { padding: 8px; }
+      .view { min-height: calc(100vh - 16px); }
+      .dojo-shell, .panel { border-radius: 24px; border-width: 3px; }
+      .dojo-shell { padding: 24px 17px; }
+      .hall-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .hall-card { min-height: 182px; padding: 15px 12px; border-radius: 19px; }
+      .hall-card p { font-size: .84rem; }
+      .hall-icon { font-size: 2.2rem; }
+      .record-chip { display: none; }
+      .game-header { grid-template-columns: auto 1fr; }
+      .header-tools { grid-column: 1 / -1; justify-content: flex-end; }
+      .arena { min-height: 500px; padding: 17px 10px; }
+      .question { margin-top: 13px; }
+      .answers { grid-template-columns: repeat(2, minmax(100px, 145px)); }
+      .answer-btn { min-height: 68px; }
+      .result-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="menuView" class="view menu-view">
+      <div class="dojo-shell">
+        <header class="hero">
+          <div class="eyebrow">一年級數學・個人熟練</div>
+          <h1>數感練功坊</h1>
+          <p>選一座練功館，從看懂、答對，練到又快又準！</p>
+          <div class="mascot-row" aria-hidden="true">
+            <span class="spark">✦</span>
+            <div class="mascot"><span class="mascot-mouth"></span><span class="belt"></span></div>
+            <span class="spark">✦</span>
+          </div>
+        </header>
+        <div id="hallGrid" class="hall-grid"></div>
+        <p class="coming-next">🥋 練好基本功，下一站就能挑戰電腦高手！</p>
+      </div>
+    </section>
+
+    <section id="levelView" class="view level-view" hidden>
+      <div class="panel">
+        <div class="topline">
+          <button id="levelBackBtn" class="back-btn" type="button">← 回練功坊</button>
+          <h2 id="levelTitle"></h2>
+        </div>
+        <div id="levelGrid" class="level-grid"></div>
+      </div>
+    </section>
+
+    <section id="gameView" class="view game-view" hidden>
+      <div class="panel game-panel">
+        <header class="game-header">
+          <button id="gameBackBtn" class="back-btn" type="button">← 離開</button>
+          <div class="game-title"><strong id="gameTitle"></strong><span id="shadowText">第一次練功，留下你的最佳紀錄吧！</span></div>
+          <div class="header-tools">
+            <button id="musicBtn" class="icon-btn" type="button" aria-pressed="true">♫ 音樂</button>
+            <button id="soundBtn" class="icon-btn" type="button" aria-pressed="true">🔊 音效</button>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-labels"><span id="progressText">第 1 題</span><span id="powerText">功力 0</span></div>
+            <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+          </div>
+        </header>
+
+        <div class="arena">
+          <div id="timerRow" class="timer-row" hidden>
+            <div class="timer-track"><div id="timerBar" class="timer-bar"></div></div>
+            <span id="timerText" class="timer-text"></span>
+          </div>
+          <span id="modeTag" class="mode-tag"></span>
+          <div id="question" class="question" aria-live="polite"></div>
+          <div id="visualAid" class="visual-aid"></div>
+          <div id="answers" class="answers"></div>
+          <div class="action-row">
+            <button id="hintBtn" class="hint-btn" type="button">💡 師父提示（1次）</button>
+            <p id="feedback" class="feedback" aria-live="assertive"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultView" class="view result-view" hidden>
+      <div class="panel result-panel">
+        <div class="result-icon">🥋</div>
+        <h2 id="resultTitle">練功完成！</h2>
+        <div id="resultStars" class="result-stars"></div>
+        <div class="result-grid">
+          <div class="result-stat"><b id="accuracyStat"></b><span>第一次答對</span></div>
+          <div class="result-stat"><b id="timeStat"></b><span>平均反應</span></div>
+          <div class="result-stat"><b id="streakStat"></b><span>最高連續答對</span></div>
+        </div>
+        <div id="focusBox" class="focus-box"></div>
+        <div class="result-actions">
+          <button id="retryBtn" class="primary-btn" type="button">再練一次</button>
+          <button id="changeLevelBtn" class="secondary-btn" type="button">換一個難度</button>
+          <button id="homeBtn" class="secondary-btn" type="button">回練功坊</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const HALLS = {
+        within5: { name: "五寶入門館", short: "5以內", icon: "🖐️", desc: "看圖練習5以內的分與合", max: 5, bg: "#fff0c4" },
+        within9: { name: "九數修練館", short: "9以內", icon: "🧩", desc: "找出9以內的部分和全部", max: 9, bg: "#dff6ed" },
+        make10: { name: "湊十大師館", short: "10的合成", icon: "🔟", desc: "快速找出合起來是10的數", max: 10, bg: "#e3edff" },
+        within10: { name: "十內綜合館", short: "10以內", icon: "🏆", desc: "分與合混合出題，全面挑戰", max: 10, bg: "#f0e7ff" }
+      };
+
+      const LEVELS = {
+        beginner: { name: "初級", title: "看圖練功", desc: "有圓點或十格框幫忙，不限時間。", color: "#35b89a", limit: 0, visualChance: 1 },
+        advanced: { name: "進階", title: "半圖半數", desc: "有時有圖、有時只有數字，每題10秒。", color: "#72a5f2", limit: 10, visualChance: .48 },
+        challenge: { name: "挑戰", title: "數字快攻", desc: "純數字混合題，每題7秒，挑戰昨日的自己。", color: "#f45b4e", limit: 7, visualChance: 0 }
+      };
+
+      const views = ["menuView", "levelView", "gameView", "resultView"];
+      const el = id => document.getElementById(id);
+      const state = {
+        hall: null, level: null, queue: [], index: 0, correct: 0, firstTryCorrect: 0,
+        streak: 0, bestStreak: 0, times: [], wrongFacts: new Map(), answered: false,
+        secondChance: false, hintUsed: false, questionStart: 0, timerId: null, musicOn: true,
+        soundOn: true, audio: null, musicTimer: null, musicStep: 0
+      };
+
+      function showView(id) {
+        views.forEach(v => el(v).hidden = v !== id);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function storageKey(hall, level) { return `dojo-record-${hall}-${level}`; }
+      function getRecord(hall, level) {
+        try { return JSON.parse(localStorage.getItem(storageKey(hall, level))) || null; }
+        catch { return null; }
+      }
+
+      function buildMenu() {
+        el("hallGrid").innerHTML = Object.entries(HALLS).map(([key, hall]) => {
+          const records = Object.keys(LEVELS).map(l => getRecord(key, l)).filter(Boolean);
+          const bestStars = records.length ? Math.max(...records.map(r => r.stars || 0)) : 0;
+          const record = bestStars ? `最佳 ${"★".repeat(bestStars)}` : "尚未練功";
+          return `<button class="hall-card" type="button" data-hall="${key}" style="--card-bg:${hall.bg}">
+            <span class="record-chip">${record}</span><span class="hall-icon" aria-hidden="true">${hall.icon}</span>
+            <h2>${hall.name}</h2><p>${hall.desc}</p><span class="hall-arrow">→</span></button>`;
+        }).join("");
+        document.querySelectorAll("[data-hall]").forEach(btn => btn.addEventListener("click", () => chooseHall(btn.dataset.hall)));
+      }
+
+      function chooseHall(key) {
+        state.hall = key;
+        const hall = HALLS[key];
+        el("levelTitle").textContent = `${hall.icon} ${hall.name}｜選擇難度`;
+        el("levelGrid").innerHTML = Object.entries(LEVELS).map(([levelKey, level]) => {
+          const record = getRecord(key, levelKey);
+          const stars = record ? `${"★".repeat(record.stars)}${"☆".repeat(3 - record.stars)}` : "☆☆☆";
+          return `<button class="level-card" type="button" data-level="${levelKey}" style="--level-color:${level.color}">
+            <span class="level-badge">${level.name}</span><h3>${level.title}</h3><p>${level.desc}</p><div class="stars">${stars}</div>
+          </button>`;
+        }).join("");
+        document.querySelectorAll("[data-level]").forEach(btn => btn.addEventListener("click", () => startGame(btn.dataset.level)));
+        showView("levelView");
+      }
+
+      function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+      function shuffle(list) {
+        const copy = [...list];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function makeQuestion(hallKey, levelKey, forcedFact = null) {
+        const max = HALLS[hallKey].max;
+        let whole, a, b, type;
+        if (forcedFact) {
+          ({ whole, a, b, type } = forcedFact);
+        } else if (hallKey === "make10") {
+          whole = 10; a = randomInt(levelKey === "beginner" ? 1 : 0, 9); b = 10 - a; type = "missing";
+        } else {
+          whole = randomInt(levelKey === "beginner" ? 2 : 3, max);
+          a = randomInt(levelKey === "beginner" ? 1 : 0, whole);
+          b = whole - a;
+          if (levelKey === "beginner") type = Math.random() < .58 ? "missing" : "combine";
+          else type = Math.random() < .5 ? "missing" : "combine";
+        }
+        const correct = type === "missing" ? b : whole;
+        const maxAnswer = hallKey === "within5" ? 5 : 10;
+        const choices = new Set([correct]);
+        const near = shuffle([correct - 1, correct + 1, correct - 2, correct + 2, a, whole]);
+        near.forEach(n => { if (choices.size < 4 && n >= 0 && n <= maxAnswer) choices.add(n); });
+        while (choices.size < 4) choices.add(randomInt(0, maxAnswer));
+        return { whole, a, b, type, correct, choices: shuffle([...choices]), fact: `${whole}=${a}+${b}`, review: !!forcedFact };
+      }
+
+      function startGame(levelKey) {
+        state.level = levelKey;
+        state.queue = Array.from({ length: 10 }, () => makeQuestion(state.hall, levelKey));
+        state.index = 0; state.correct = 0; state.firstTryCorrect = 0; state.streak = 0;
+        state.bestStreak = 0; state.times = []; state.wrongFacts = new Map(); state.hintUsed = false;
+        el("gameTitle").textContent = `${HALLS[state.hall].name}・${LEVELS[levelKey].name}`;
+        const record = getRecord(state.hall, levelKey);
+        el("shadowText").textContent = record ? `昨日的我：平均 ${record.avg.toFixed(1)} 秒・${record.accuracy}%` : "第一次練功，留下你的最佳紀錄吧！";
+        el("hintBtn").hidden = levelKey === "challenge";
+        el("hintBtn").disabled = false;
+        el("hintBtn").textContent = "💡 師父提示（1次）";
+        showView("gameView");
+        ensureAudio();
+        if (state.musicOn) startMusic();
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        clearTimer();
+        state.answered = false;
+        state.secondChance = false;
+        el("feedback").textContent = "";
+        el("feedback").className = "feedback";
+        const q = state.queue[state.index];
+        const level = LEVELS[state.level];
+        const reviewLabel = q.review ? "・錯題再挑戰" : "";
+        el("modeTag").textContent = `${q.type === "missing" ? "找出另一部分" : "合起來是多少"}${reviewLabel}`;
+        el("question").innerHTML = q.type === "missing"
+          ? `${q.whole} ＝ ${q.a} ＋ <span class="blank">？</span>`
+          : `${q.a} ＋ ${q.b} ＝ <span class="blank">？</span>`;
+        renderVisual(q, Math.random() < level.visualChance);
+        const colors = ["#ffd166", "#8fdcc8", "#91b7f4", "#d6b1ef"];
+        el("answers").innerHTML = q.choices.map((choice, i) => `<button class="answer-btn" type="button" data-answer="${choice}" style="--balloon:${colors[i]}">${choice}</button>`).join("");
+        document.querySelectorAll("[data-answer]").forEach(btn => btn.addEventListener("click", () => answerQuestion(Number(btn.dataset.answer), btn)));
+        el("progressText").textContent = `第 ${state.index + 1} 題／${state.queue.length} 題${q.review ? "（加練）" : ""}`;
+        el("powerText").textContent = `功力 ${state.correct}`;
+        el("progressBar").style.width = `${state.index / state.queue.length * 100}%`;
+        state.questionStart = performance.now();
+        if (level.limit) startTimer(level.limit); else el("timerRow").hidden = true;
+      }
+
+      function renderVisual(q, show) {
+        const box = el("visualAid");
+        box.innerHTML = "";
+        if (!show) { box.innerHTML = `<span style="color:#75889b;font-weight:800">先在心裡想一想</span>`; return; }
+        if (state.hall === "make10") {
+          box.innerHTML = `<div class="ten-frame" aria-label="十格框">${Array.from({ length: 10 }, (_, i) => `<span class="ten-cell ${i < q.a ? "filled" : ""}"></span>`).join("")}</div>`;
+          return;
+        }
+        const dots = (count, color) => `<div class="dot-box" aria-label="${count}個圓點">${Array.from({ length: count }, () => `<span class="dot" style="--dot-color:${color}"></span>`).join("")}</div>`;
+        if (q.type === "combine") box.innerHTML = `<div class="dot-groups">${dots(q.a, "#72a5f2")}<span class="visual-symbol">＋</span>${dots(q.b, "#f45b4e")}</div>`;
+        else box.innerHTML = `<div class="dot-groups">${dots(q.whole, "#f7c948")}<span class="visual-symbol">分成</span>${dots(q.a, "#72a5f2")}<span class="visual-symbol">和 ？</span></div>`;
+      }
+
+      function answerQuestion(value, button, timedOut = false) {
+        if (state.answered) return;
+        clearTimer();
+        const q = state.queue[state.index];
+        const elapsed = Math.min((performance.now() - state.questionStart) / 1000, LEVELS[state.level].limit || 30);
+        if (value === q.correct && !timedOut) {
+          state.answered = true;
+          button.classList.add("correct");
+          state.correct++;
+          state.streak++;
+          state.bestStreak = Math.max(state.bestStreak, state.streak);
+          if (!state.secondChance && !q.review) { state.firstTryCorrect++; state.times.push(elapsed); }
+          el("feedback").textContent = state.streak >= 3 ? `太棒了！${state.streak} 連斬！` : "答對了！功力上升！";
+          el("feedback").className = "feedback good";
+          playEffect("correct");
+          setTimeout(nextQuestion, 720);
+        } else {
+          button?.classList.add("wrong");
+          state.streak = 0;
+          state.secondChance = true;
+          const count = state.wrongFacts.get(q.fact) || 0;
+          state.wrongFacts.set(q.fact, count + 1);
+          if (!q.review && state.queue.length < 13 && count === 0) {
+            const reviewAt = Math.min(state.index + randomInt(2, 3), state.queue.length);
+            state.queue.splice(reviewAt, 0, makeQuestion(state.hall, state.level, q));
+          }
+          el("feedback").textContent = timedOut ? "時間到！看看提示，再試一次。" : "差一點！看看圖，再試一次。";
+          el("feedback").className = "feedback try";
+          renderVisual(q, true);
+          playEffect("wrong");
+          setTimeout(() => button?.classList.remove("wrong"), 380);
+        }
+      }
+
+      function nextQuestion() {
+        state.index++;
+        if (state.index >= state.queue.length) finishGame(); else renderQuestion();
+      }
+
+      function startTimer(seconds) {
+        el("timerRow").hidden = false;
+        const started = performance.now();
+        const update = () => {
+          const elapsed = (performance.now() - started) / 1000;
+          const remain = Math.max(0, seconds - elapsed);
+          el("timerText").textContent = `${Math.ceil(remain)} 秒`;
+          el("timerBar").style.width = `${remain / seconds * 100}%`;
+          el("timerBar").style.background = remain < 3 ? "#f45b4e" : "#72a5f2";
+          if (remain <= 0) { clearTimer(); answerQuestion(NaN, null, true); }
+        };
+        update();
+        state.timerId = setInterval(update, 100);
+      }
+
+      function clearTimer() { if (state.timerId) clearInterval(state.timerId); state.timerId = null; }
+
+      function useHint() {
+        if (state.hintUsed || state.level === "challenge") return;
+        state.hintUsed = true;
+        el("hintBtn").disabled = true;
+        el("hintBtn").textContent = "💡 提示已使用";
+        renderVisual(state.queue[state.index], true);
+        toast("師父把圖像提示請出來了！");
+      }
+
+      function finishGame() {
+        clearTimer(); stopMusic();
+        const baseCount = 10;
+        const accuracy = Math.round(state.firstTryCorrect / baseCount * 100);
+        const avg = state.times.length ? state.times.reduce((a,b) => a + b, 0) / state.times.length : 0;
+        const stars = accuracy >= 90 && (state.level === "beginner" || avg <= (LEVELS[state.level].limit * .72)) ? 3 : accuracy >= 90 ? 2 : accuracy >= 80 ? 1 : 0;
+        const old = getRecord(state.hall, state.level);
+        const record = { stars: Math.max(stars, old?.stars || 0), accuracy: Math.max(accuracy, old?.accuracy || 0), avg: old?.avg ? Math.min(avg || old.avg, old.avg) : avg, date: Date.now() };
+        localStorage.setItem(storageKey(state.hall, state.level), JSON.stringify(record));
+        el("resultTitle").textContent = stars === 3 ? "功力大進步！" : stars >= 1 ? "練功完成！" : "再練一次就會更熟！";
+        el("resultStars").textContent = `${"★".repeat(stars)}${"☆".repeat(3 - stars)}`;
+        el("accuracyStat").textContent = `${accuracy}%`;
+        el("timeStat").textContent = avg ? `${avg.toFixed(1)}秒` : "—";
+        el("streakStat").textContent = `${state.bestStreak}題`;
+        const wrong = [...state.wrongFacts.keys()].slice(0, 3).map(f => f.replace("=", "＝").replace("+", "＋"));
+        let message = wrong.length ? `再練一下：${wrong.join("、")}。這些題目下次還會回來幫你變熟！` : "每一組都答得很穩，下一次可以挑戰更高難度！";
+        if (old && avg && avg < old.avg) message += ` 你比昨日的自己快了 ${(old.avg - avg).toFixed(1)} 秒！`;
+        el("focusBox").textContent = message;
+        showView("resultView");
+        playEffect(stars >= 2 ? "victory" : "correct");
+        buildMenu();
+      }
+
+      function ensureAudio() {
+        if (!state.audio) state.audio = new (window.AudioContext || window.webkitAudioContext)();
+        if (state.audio.state === "suspended") state.audio.resume();
+      }
+
+      function tone(freq, duration, type = "sine", volume = .10, delay = 0) {
+        if (!state.audio) return;
+        const now = state.audio.currentTime + delay;
+        const osc = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(.001, now);
+        gain.gain.exponentialRampToValueAtTime(volume, now + .02);
+        gain.gain.exponentialRampToValueAtTime(.001, now + duration);
+        osc.connect(gain).connect(state.audio.destination); osc.start(now); osc.stop(now + duration + .03);
+      }
+
+      function playEffect(kind) {
+        if (!state.soundOn) return;
+        ensureAudio();
+        if (kind === "correct") { tone(523,.15,"triangle",.18); tone(784,.24,"triangle",.16,.12); }
+        if (kind === "wrong") { tone(185,.18,"sawtooth",.08); tone(150,.22,"sawtooth",.06,.12); }
+        if (kind === "victory") [523,659,784,1047].forEach((f,i) => tone(f,.28,"triangle",.15,i*.12));
+      }
+
+      function startMusic() {
+        ensureAudio(); stopMusic();
+        const notes = [262,330,392,330,294,349,440,349];
+        const tick = () => { if (!state.musicOn || el("gameView").hidden) return; tone(notes[state.musicStep++ % notes.length], .18, "sine", .025); };
+        tick(); state.musicTimer = setInterval(tick, 420);
+      }
+      function stopMusic() { if (state.musicTimer) clearInterval(state.musicTimer); state.musicTimer = null; }
+
+      function toggleMusic() {
+        state.musicOn = !state.musicOn;
+        el("musicBtn").setAttribute("aria-pressed", String(state.musicOn));
+        el("musicBtn").textContent = state.musicOn ? "♫ 音樂" : "♫ 已靜音";
+        if (state.musicOn) startMusic(); else stopMusic();
+      }
+      function toggleSound() {
+        state.soundOn = !state.soundOn;
+        el("soundBtn").setAttribute("aria-pressed", String(state.soundOn));
+        el("soundBtn").textContent = state.soundOn ? "🔊 音效" : "🔇 已靜音";
+      }
+
+      function toast(message) {
+        el("toast").textContent = message; el("toast").classList.add("show");
+        setTimeout(() => el("toast").classList.remove("show"), 1800);
+      }
+
+      el("levelBackBtn").addEventListener("click", () => showView("menuView"));
+      el("gameBackBtn").addEventListener("click", () => { clearTimer(); stopMusic(); chooseHall(state.hall); });
+      el("hintBtn").addEventListener("click", useHint);
+      el("musicBtn").addEventListener("click", toggleMusic);
+      el("soundBtn").addEventListener("click", toggleSound);
+      el("retryBtn").addEventListener("click", () => startGame(state.level));
+      el("changeLevelBtn").addEventListener("click", () => chooseHall(state.hall));
+      el("homeBtn").addEventListener("click", () => showView("menuView"));
+      window.addEventListener("keydown", event => {
+        if (el("gameView").hidden || state.answered || event.repeat) return;
+        if (/^[0-9]$/.test(event.key)) document.querySelector(`[data-answer="${event.key}"]`)?.click();
+      });
+
+      buildMenu();
+    })();
+  </script>
+</body>
+</html>
