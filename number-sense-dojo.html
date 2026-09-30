@@ -139,6 +139,7 @@
     .coming-next { position: relative; z-index: 1; margin: 22px auto 0; text-align: center; color: var(--muted); font-weight: 800; }
 
     .level-view, .game-view, .result-view { display: grid; place-items: center; }
+    .game-view { align-content: start; justify-items: center; }
     .panel {
       width: min(980px, 100%);
       background: rgba(255,253,245,.97);
@@ -178,7 +179,8 @@
     .stars { color: #e6a700; font-size: 1.45rem; letter-spacing: .1em; }
 
     .game-panel { width: min(1060px, 100%); padding: clamp(13px, 2.5vw, 28px); }
-    .game-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px; }
+    .game-header { position: sticky; top: 0; z-index: 12; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px; margin: -8px -8px 0; padding: 8px; border-radius: 20px; background: rgba(255,253,245,.97); box-shadow: 0 8px 14px rgba(23,54,93,.08); }
+    #gameBackBtn { position: relative; z-index: 15; min-height: 44px; white-space: nowrap; pointer-events: auto; }
     .game-title { min-width: 0; }
     .game-title strong { display: block; font-size: clamp(1rem, 2.4vw, 1.35rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .game-title span { color: var(--muted); font-size: .9rem; font-weight: 800; }
@@ -431,6 +433,9 @@
     .tug-rope { position: relative; height: 35px; margin-top: 9px; border: 3px solid #68452f; border-radius: 999px; background: repeating-linear-gradient(90deg, #c18b57 0 11px, #d9ad74 11px 22px); }
     .tug-center { position: absolute; top: -8px; left: 50%; width: 5px; height: 44px; background: #fff; box-shadow: 0 0 0 2px #b74a4a; transform: translateX(-50%); }
     .tug-marker { position: absolute; top: -21px; left: 50%; font-size: 2.3rem; filter: drop-shadow(0 3px 0 rgba(23,54,93,.15)); transform: translateX(-50%); transition: left .42s cubic-bezier(.2,.8,.2,1); white-space: nowrap; }
+    .tug-marker.pulled { animation: tugBounce .58s ease; }
+    .tug-board.pull-user { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset 10px 0 0 rgba(244,91,78,.23); }
+    .tug-board.pull-computer { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset -10px 0 0 rgba(75,134,232,.27); }
 
     /* 四館各有自己的遊戲世界 */
     .game-view[data-hall="within5"] { --hall-dark: #2f8f69; }
@@ -527,6 +532,7 @@
     @keyframes hintNudge { 0%,78%,100% { transform: translateY(0); } 84% { transform: translateY(-4px) rotate(-1deg); } 90% { transform: translateY(0) rotate(1deg); } }
     @keyframes rankArrival { from { opacity: 0; transform: translateY(-12px) scale(.88); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes heartPulse { 25% { transform: scale(1.025); } 55% { transform: scale(.99); } }
+    @keyframes tugBounce { 25% { translate: 0 -8px; scale: 1.18; } 60% { translate: 0 2px; scale: .96; } }
 
     @media (max-width: 900px) {
       .hall-grid { grid-template-columns: repeat(2, 1fr); }
@@ -543,7 +549,7 @@
       .hall-card p { font-size: .84rem; }
       .hall-icon { font-size: 2.2rem; }
       .record-chip { display: none; }
-      .game-header { grid-template-columns: auto 1fr; }
+      .game-header { grid-template-columns: auto 1fr; top: 0; gap: 8px; }
       .header-tools { grid-column: 1 / -1; justify-content: flex-end; }
       .arena { min-height: 650px; padding: 13px 8px 24px; }
       .coach-strip { width: 96%; gap: 8px; }
@@ -917,7 +923,13 @@
       function updateTugMarker(message) {
         const bounded = Math.max(9, Math.min(91, state.tugPosition));
         state.tugPosition = bounded;
-        el("tugMarker").style.left = `${bounded}%`;
+        const marker = el("tugMarker");
+        marker.style.left = `${bounded}%`;
+        marker.classList.remove("pulled");
+        void marker.offsetWidth;
+        marker.classList.add("pulled");
+        el("tugBoard").classList.toggle("pull-user", bounded > 50);
+        el("tugBoard").classList.toggle("pull-computer", bounded < 50);
         el("powerText").textContent = `繩子拉力 ${bounded}%`;
         if (message) el("tugStatus").textContent = message;
       }
@@ -992,7 +1004,10 @@
         el("progressBar").style.width = `${state.index / state.queue.length * 100}%`;
         state.questionStart = performance.now();
         state.computerThinkTime = 2.0 + Math.random() * 3.3;
-        if (state.level === "challenge") updateTugMarker("電腦正在想答案⋯⋯你也準備好了嗎？");
+        if (state.level === "challenge") {
+          const lead = state.tugPosition > 50 ? "你目前領先，" : state.tugPosition < 50 ? "電腦暫時領先，" : "目前平手，";
+          updateTugMarker(`${lead}想好答案就把繩子拉過來！`);
+        }
         if (level.limit) startTimer(level.limit); else el("timerRow").hidden = true;
       }
 
@@ -1044,11 +1059,11 @@
           if (!state.secondChance && !q.review) { state.firstTryCorrect++; state.times.push(elapsed); }
           if (state.level === "challenge") {
             if (elapsed <= state.computerThinkTime) {
-              state.tugPosition += 9;
-              updateTugMarker(`你比電腦快！繩子往你這邊拉！`);
+              state.tugPosition += 16;
+              updateTugMarker("答對又比電腦快！繩子往你這邊大拉一步！");
             } else {
-              state.tugPosition -= 7;
-              updateTugMarker(`答對了！電腦快一點，繩子移了一小步。`);
+              state.tugPosition -= 12;
+              updateTugMarker("答對了！電腦反應更快，繩子移向電腦！");
             }
           }
           el("feedback").textContent = state.streak >= 3 ? `太棒了！${state.streak} 連斬！` : "答對了！功力上升！";
@@ -1066,20 +1081,28 @@
           state.secondChance = true;
           const count = state.wrongFacts.get(q.fact) || 0;
           state.wrongFacts.set(q.fact, count + 1);
-          if (state.level === "challenge" && count === 0) {
-            state.tugPosition -= 8;
-            updateTugMarker("答錯了，電腦隊趁機拉了一步！");
+          if (state.level === "challenge") {
+            state.tugPosition -= 14;
+            updateTugMarker("答錯了！電腦隊趁機把繩子拉過去！");
+          }
+          const computerWins = state.level === "challenge" && state.tugPosition <= 12;
+          if (computerWins) {
+            state.answered = true;
+            updateTugMarker("電腦把繩子拉到終點了！");
           }
           if (!q.review && state.queue.length < 13 && count === 0) {
             const reviewAt = Math.min(state.index + randomInt(2, 3), state.queue.length);
             state.queue.splice(reviewAt, 0, makeQuestion(state.hall, state.level, q));
           }
-          el("feedback").textContent = timedOut ? "時間到！再想想，或按師父提示。" : "差一點！再想想，或按師父提示。";
+          el("feedback").textContent = computerWins ? "電腦隊拉到終點，這回合獲勝！" : timedOut ? "時間到！再想想，或按師父提示。" : "差一點！再想想，或按師父提示。";
           el("feedback").className = "feedback try";
           el("coachMascot").className = "coach-mascot worried";
-          el("coachBubble").textContent = "沒關係，換個答案試試看！";
+          el("coachBubble").textContent = computerWins ? "再練幾次，下次把繩子拉回來！" : "沒關係，換個答案試試看！";
           playEffect("wrong");
-          setTimeout(() => button?.classList.remove("wrong"), 380);
+          setTimeout(() => {
+            button?.classList.remove("wrong");
+            if (computerWins) finishGame();
+          }, computerWins ? 720 : 380);
         }
       }
 
