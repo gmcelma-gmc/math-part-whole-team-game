@@ -179,7 +179,7 @@
     .stars { color: #e6a700; font-size: 1.45rem; letter-spacing: .1em; }
 
     .game-panel { width: min(1060px, 100%); padding: clamp(13px, 2.5vw, 28px); }
-    .game-header { position: sticky; top: 0; z-index: 12; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px; margin: -8px -8px 0; padding: 8px; border-radius: 20px; background: rgba(255,253,245,.97); box-shadow: 0 8px 14px rgba(23,54,93,.08); }
+    .game-header { position: sticky; top: 0; z-index: 12; display: grid; grid-template-columns: auto minmax(0,1fr) auto; width: 100%; align-items: center; gap: 13px; margin: -8px 0 0; padding: 8px; border-radius: 20px; background: rgba(255,253,245,.97); box-shadow: 0 8px 14px rgba(23,54,93,.08); }
     #gameBackBtn { position: relative; z-index: 15; min-height: 44px; white-space: nowrap; pointer-events: auto; }
     .game-title { min-width: 0; }
     .game-title strong { display: block; font-size: clamp(1rem, 2.4vw, 1.35rem); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -368,25 +368,26 @@
     .rank-badge { padding: 3px 9px; border-radius: 999px; color: #fff; background: var(--rank-color, #8896a6); font-size: .82rem; }
     .scene-landmark { position: absolute; z-index: 0; right: 6%; top: 92px; font-size: 6.5rem; opacity: .9; filter: drop-shadow(0 8px 0 rgba(23,54,93,.12)); pointer-events: none; }
 
-    /* Advanced level: quick judgment and bell game */
+    /* Advanced level: giant target and slap-the-answer card game */
     .heart-table {
       position: relative;
       z-index: 2;
-      width: min(620px, 98%);
+      width: min(760px, 98%);
       margin: 17px auto 20px;
       padding: 20px;
       border: 5px solid #fff;
       border-radius: 30px;
       color: var(--ink);
-      background: linear-gradient(145deg, #fff8e6, #ffe6eb);
-      box-shadow: 0 10px 0 rgba(120,38,71,.18);
+      background: radial-gradient(circle at 10% 5%, #fff 0 4%, transparent 4.5%), linear-gradient(145deg, #fff8bd, #ffd9e8 55%, #d9e9ff);
+      box-shadow: 0 10px 0 rgba(120,38,71,.18), 0 20px 38px rgba(61,46,116,.15);
       text-align: center;
     }
     .heart-instruction { margin: 0 0 12px; font-size: 1.05rem; font-weight: 1000; }
-    .heart-target { display: inline-flex; align-items: center; gap: 8px; padding: 8px 17px; border-radius: 999px; color: white; background: #e94b65; box-shadow: 0 4px 0 #ae2e48; font-size: 1.15rem; font-weight: 1000; }
+    .heart-target { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-width: 230px; padding: 7px 25px; border: 4px solid white; border-radius: 28px; color: white; background: linear-gradient(135deg,#f05d77,#a846d5); box-shadow: 0 7px 0 #8b315b; font-size: 1.2rem; font-weight: 1000; }
+    .heart-target strong { font-size: clamp(3rem, 10vw, 5.2rem); line-height: 1; text-shadow: 0 4px 0 rgba(80,28,87,.22); }
     .heart-counters { display: flex; justify-content: space-between; gap: 8px; margin: 13px 0; font-weight: 1000; }
     .heart-life { color: #dd3f60; font-size: 1.4rem; letter-spacing: .12em; }
-    .flip-cards { display: flex; justify-content: center; align-items: center; gap: 15px; min-height: 150px; margin: 10px 0 16px; }
+    .flip-cards { display: grid; grid-template-columns: minmax(110px,170px) 70px 1fr; justify-content: center; align-items: center; gap: 14px; min-height: 150px; margin: 14px 0 18px; }
     .flip-card {
       display: grid;
       place-items: center;
@@ -404,9 +405,24 @@
     }
     .flip-card:nth-child(2) { transform: rotate(3deg); }
     .flip-card.flipped { border-color: #e5a52e; background: #fff; transform: translateY(-5px) rotate(0); }
+    .known-card { position: relative; display: grid; place-items: center; min-height: 110px; border: 4px solid #fff; border-radius: 22px; color: #287b91; background: linear-gradient(145deg,#d8f6ff,#fff); box-shadow: 0 7px 0 #85bed2; font-size: 3.3rem; font-weight: 1000; transform: rotate(-3deg); }
+    .known-card small { position:absolute; top:6px; left:10px; color:#51748a; font-size:.72rem; }
+    .heart-plus { color: #f05d77; font-size: 2.6rem; font-weight: 1000; }
+    .heart-answers { display:grid; grid-template-columns:repeat(3,minmax(64px,1fr)); gap:9px; perspective:500px; }
+    .heart-answer { min-height:74px; border:4px solid #fff; border-radius:18px; color:#24385d; background:linear-gradient(145deg,#fff,#e9e5ff); box-shadow:0 6px 0 #9389ca; font-size:2.35rem; font-weight:1000; cursor:pointer; transition:transform .16s,box-shadow .16s,filter .16s; }
+    .heart-answer:nth-child(3n+1) { transform:rotate(-3deg); }
+    .heart-answer:nth-child(3n+2) { transform:rotate(2deg); }
+    .heart-answer:nth-child(3n) { transform:rotate(-1deg); }
+    .heart-answer:hover { transform:translateY(-5px) rotate(0); filter:brightness(1.04); }
+    .heart-answer:active,.heart-answer.slap { transform:translateY(5px) scale(.94) rotate(0); box-shadow:0 1px 0 #9389ca; }
+    .heart-answer.correct { background:#aaf0d2; box-shadow:0 6px 0 #40a985; }
+    .heart-answer.wrong { background:#ffc0c0; box-shadow:0 6px 0 #da6a6a; }
+    .slap-hand { position:absolute; z-index:8; left:50%; top:26%; font-size:5rem; opacity:0; pointer-events:none; transform:translate(-50%,-140%) rotate(-25deg) scale(.65); filter:drop-shadow(0 5px 2px #26365555); }
+    .slap-hand.slap-down { animation:slapDown .42s cubic-bezier(.2,.8,.3,1) forwards; }
+    @keyframes slapDown { 45% { opacity:1; transform:translate(-50%,-45%) rotate(8deg) scale(1.15); } 68% { opacity:1; transform:translate(-50%,-50%) rotate(0) scale(1); } 100% { opacity:0; transform:translate(-50%,-38%) rotate(0) scale(.92); } }
     .heart-clock { height: 12px; margin: 0 auto 13px; border-radius: 999px; background: #eedee3; overflow: hidden; }
     .heart-clock-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #fbca4e, #eb4a67); transform-origin: left; }
-    .heart-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .heart-actions { display: none; }
     .heart-action { min-height: 60px; border: 4px solid var(--ink); border-radius: 19px; font-size: 1.15rem; font-weight: 1000; cursor: pointer; box-shadow: 0 6px 0 rgba(23,54,93,.20); }
     .heart-action:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(23,54,93,.20); }
     .bell-action { color: #71313c; background: #ffb2b6; }
@@ -420,22 +436,23 @@
     .tug-board {
       position: relative;
       z-index: 2;
-      width: min(620px, 98%);
+      width: min(760px, 98%);
       margin: 11px auto 16px;
       padding: 11px 17px 14px;
       border: 4px solid #fff;
       border-radius: 24px;
-      background: linear-gradient(90deg, #ffe5ad, #fff8e9 48%, #d9e9ff);
-      box-shadow: 0 7px 0 rgba(23,54,93,.16);
+      background: radial-gradient(circle at 12% 15%,#fff 0 3%,transparent 3.5%), linear-gradient(180deg,#b8ebff 0 58%,#8bdb91 58% 100%);
+      box-shadow: 0 7px 0 rgba(23,54,93,.16),0 18px 34px rgba(35,95,122,.18);
     }
-    .tug-labels { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 1000; }
-    .tug-status { color: #9a3d3d; font-size: .9rem; text-align: center; }
-    .tug-rope { position: relative; height: 35px; margin-top: 9px; border: 3px solid #68452f; border-radius: 999px; background: repeating-linear-gradient(90deg, #c18b57 0 11px, #d9ad74 11px 22px); }
+    .tug-labels { display: grid; grid-template-columns:1fr 1.5fr 1fr; align-items: center; gap: 8px; font-weight: 1000; }
+    .tug-labels > span:first-child,.tug-labels > span:last-child { padding:8px 10px; border:3px solid #fff; border-radius:18px; background:#fff9; text-align:center; box-shadow:0 4px 0 #38557a33; }
+    .tug-status { color: #264668; font-size: .9rem; text-align: center; }
+    .tug-rope { position: relative; height: 43px; margin-top: 14px; border: 4px solid #67452f; border-radius: 999px; background: repeating-linear-gradient(90deg, #c18b57 0 11px, #e6bd83 11px 22px); box-shadow:inset 0 3px 4px #64452b55,0 4px 0 #ffffffaa; }
     .tug-center { position: absolute; top: -8px; left: 50%; width: 5px; height: 44px; background: #fff; box-shadow: 0 0 0 2px #b74a4a; transform: translateX(-50%); }
-    .tug-marker { position: absolute; top: -21px; left: 50%; font-size: 2.3rem; filter: drop-shadow(0 3px 0 rgba(23,54,93,.15)); transform: translateX(-50%); transition: left .42s cubic-bezier(.2,.8,.2,1); white-space: nowrap; }
+    .tug-marker { position: absolute; top: -24px; left: 50%; font-size: 2.5rem; filter: drop-shadow(0 3px 0 rgba(23,54,93,.15)); transform: translateX(-50%); transition: left .42s cubic-bezier(.2,.8,.2,1); white-space: nowrap; }
     .tug-marker.pulled { animation: tugBounce .58s ease; }
-    .tug-board.pull-user { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset 10px 0 0 rgba(244,91,78,.23); }
-    .tug-board.pull-computer { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset -10px 0 0 rgba(75,134,232,.27); }
+    .tug-board.pull-user { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset 10px 0 0 rgba(244,91,78,.35); }
+    .tug-board.pull-computer { box-shadow: 0 7px 0 rgba(23,54,93,.16), inset -10px 0 0 rgba(75,134,232,.35); }
 
     /* 四館各有自己的遊戲世界 */
     .game-view[data-hall="within5"] { --hall-dark: #2f8f69; }
@@ -549,7 +566,7 @@
       .hall-card p { font-size: .84rem; }
       .hall-icon { font-size: 2.2rem; }
       .record-chip { display: none; }
-      .game-header { grid-template-columns: auto 1fr; top: 0; gap: 8px; }
+      .game-header { grid-template-columns: auto minmax(0,1fr); top: 0; gap: 8px; }
       .header-tools { grid-column: 1 / -1; justify-content: flex-end; }
       .arena { min-height: 650px; padding: 13px 8px 24px; }
       .coach-strip { width: 96%; gap: 8px; }
@@ -568,9 +585,12 @@
       .answer-btn { width: 96px; height: 82px; }
       .action-row { flex-direction: column; margin-top: 15px; }
       .heart-table { padding: 16px 12px; }
-      .flip-cards { min-height: 128px; gap: 10px; }
-      .flip-card { height: 112px; font-size: 3.1rem; }
-      .heart-action { min-height: 56px; padding: 5px; font-size: 1rem; }
+      .flip-cards { grid-template-columns: 74px 26px 1fr; min-height: 128px; gap: 7px; }
+      .known-card { min-height: 82px; font-size: 2.5rem; }
+      .heart-plus { font-size: 1.8rem; }
+      .heart-answers { grid-template-columns: repeat(2,minmax(48px,1fr)); gap: 7px; }
+      .heart-answer { min-height: 58px; border-width: 3px; border-radius: 14px; font-size: 1.8rem; }
+      .slap-hand { font-size: 4rem; }
       .tug-board { padding-inline: 10px; }
       .tug-status { max-width: 125px; font-size: .77rem; }
       .result-grid { grid-template-columns: 1fr; }
@@ -637,18 +657,18 @@
             <div id="coachMascot" class="coach-mascot" aria-hidden="true"><span class="coach-mouth"></span><span class="coach-belt"></span></div>
             <div id="coachBubble" class="coach-bubble">看清楚分合圖，再敲答案鼓！</div>
           </div>
-          <section id="heartMode" class="heart-table" hidden aria-label="數學心臟病拍鈴遊戲">
-            <p class="heart-instruction">兩張牌翻開後，合起來是目標數就快拍鈴！</p>
-            <div class="heart-target">🎯 目標：<span id="heartTarget">5</span></div>
+          <section id="heartMode" class="heart-table" hidden aria-label="心臟病大手拍數字牌遊戲">
+            <p class="heart-instruction">🎯 看清楚大目標，找出少的數字！用大手拍下正確答案牌！</p>
+            <div class="heart-target"><span>目標數</span><strong id="heartTarget">5</strong></div>
             <div class="heart-counters"><span>回合 <b id="heartRound">1／10</b></span><span id="heartLives" class="heart-life" aria-label="剩餘愛心">❤️❤️❤️</span><span>得分 <b id="heartScore">0</b></span></div>
-            <div class="flip-cards" aria-live="polite"><div id="heartCardA" class="flip-card flipped">2</div><div id="heartCardB" class="flip-card">？</div></div>
+            <div class="flip-cards" aria-live="polite"><div class="known-card"><small>已知數</small><span id="heartKnown">2</span></div><span class="heart-plus">＋</span><div id="heartCards" class="heart-answers" aria-label="散亂的答案數字牌"></div></div>
+            <span id="slapHand" class="slap-hand" aria-hidden="true">🖐️</span>
             <div class="heart-clock"><div id="heartClockBar" class="heart-clock-bar"></div></div>
-            <div class="heart-actions"><button id="heartBellBtn" class="heart-action bell-action" type="button" disabled>🔔 拍鈴！</button><button id="heartPassBtn" class="heart-action pass-action" type="button" disabled>✋ 放過這組</button></div>
             <p id="heartFeedback" class="heart-feedback" aria-live="assertive"></p>
           </section>
           <section id="tugBoard" class="tug-board" hidden aria-label="和電腦拔河">
-            <div class="tug-labels"><span>🥋 你</span><span id="tugStatus" class="tug-status">答對又快，繩子就往你這邊！</span><span>🤖 電腦</span></div>
-            <div class="tug-rope"><span class="tug-center"></span><span id="tugMarker" class="tug-marker">🧒🏻🪢🤖</span></div>
+            <div class="tug-labels"><span>🧒🏻 我方小隊</span><span id="tugStatus" class="tug-status">答對又快，繩子就往你這邊！</span><span>🤖 電腦隊</span></div>
+            <div class="tug-rope"><span class="tug-center"></span><span id="tugMarker" class="tug-marker">🪢⭐</span></div>
           </section>
           <div id="problemCard" class="problem-card">
             <span id="modeTag" class="mode-tag"></span>
@@ -788,29 +808,12 @@
       function makeHeartRounds(hallKey) {
         const max = HALLS[hallKey].max;
         return Array.from({ length: 10 }, () => {
-          let target, a, b;
-          if (hallKey === "make10") {
-            target = 10;
-            const isMatch = Math.random() < .5;
-            if (isMatch) { a = randomInt(1, 9); b = 10 - a; }
-            else {
-              const pairs = [];
-              for (let first = 1; first < 9; first++) for (let second = 1; second < 10 - first; second++) pairs.push([first, second]);
-              [a, b] = pairs[randomInt(0, pairs.length - 1)];
-            }
-          } else {
-            target = randomInt(3, max);
-            const isMatch = Math.random() < .5;
-            if (isMatch) { a = randomInt(1, target - 1); b = target - a; }
-            else {
-              const pairs = [];
-              for (let first = 1; first < max; first++) for (let second = 1; first + second <= max; second++) {
-                if (first + second !== target) pairs.push([first, second]);
-              }
-              [a, b] = pairs[randomInt(0, pairs.length - 1)];
-            }
-          }
-          return { target, a, b, match: a + b === target };
+          const target = hallKey === "make10" ? 10 : randomInt(3, max);
+          const known = randomInt(1, target - 1);
+          const answer = target - known;
+          const choices = new Set([answer]);
+          while (choices.size < 6) choices.add(randomInt(0, Math.min(max, 10)));
+          return { target, known, answer, choices: shuffle([...choices]) };
         });
       }
 
@@ -828,31 +831,22 @@
         el("timerRow").hidden = true;
         el("hintBtn").hidden = true;
         el("coachMascot").className = "coach-mascot";
-        el("coachBubble").textContent = "看牌、想一想，符合目標就拍鈴！";
+        el("coachBubble").textContent = "目標數減掉已知數，快拍出另一部分！";
         el("heartTarget").textContent = round.target;
+        el("heartKnown").textContent = round.known;
         el("heartRound").textContent = `${state.heartIndex + 1}／${state.heartRounds.length}`;
         el("heartScore").textContent = state.heartScore;
         el("heartLives").textContent = "❤️".repeat(state.heartLives) + "🤍".repeat(3 - state.heartLives);
-        el("heartCardA").textContent = round.a;
-        el("heartCardB").textContent = "？";
-        el("heartCardB").classList.remove("flipped");
-        el("heartFeedback").textContent = "牌快翻開了⋯⋯";
+        el("heartCards").innerHTML = round.choices.map((value, i) => `<button class="heart-answer" type="button" data-heart-answer="${value}" style="--card-tilt:${(i % 3 - 1) * 2}deg">${value}</button>`).join("");
+        el("heartCards").querySelectorAll("[data-heart-answer]").forEach(button => button.addEventListener("click", () => answerHeartRound(Number(button.dataset.heartAnswer), button)));
+        el("slapHand").classList.remove("slap-down");
+        el("heartFeedback").textContent = "大手準備好了嗎？快拍正確的數字牌！";
         el("heartFeedback").className = "heart-feedback";
-        el("heartBellBtn").disabled = true;
-        el("heartPassBtn").disabled = true;
         el("progressText").textContent = `心臟病拍鈴・第 ${state.heartIndex + 1} 回合`;
         el("powerText").textContent = `得分 ${state.heartScore}・❤️ ${state.heartLives}`;
         el("progressBar").style.width = `${state.heartIndex / state.heartRounds.length * 100}%`;
-        state.heartRevealTimeout = setTimeout(() => {
-          if (state.answered || el("gameView").hidden) return;
-          el("heartCardB").textContent = round.b;
-          el("heartCardB").classList.add("flipped");
-          el("heartFeedback").textContent = round.match ? "合起來剛好嗎？快判斷！" : "仔細看，合起來是目標數嗎？";
-          el("heartBellBtn").disabled = false;
-          el("heartPassBtn").disabled = false;
-          state.questionStart = performance.now();
-          startHeartClock(2400);
-        }, 480);
+        state.questionStart = performance.now();
+        startHeartClock(6500);
       }
 
       function startHeartClock(duration) {
@@ -862,7 +856,7 @@
           el("heartClockBar").style.width = `${remaining / duration * 100}%`;
           if (remaining <= 0) {
             clearHeartTimer();
-            answerHeartRound(null, true);
+            answerHeartRound(null, null, true);
           }
         };
         update();
@@ -876,14 +870,26 @@
         state.heartRevealTimeout = null;
       }
 
-      function answerHeartRound(slap, timedOut = false) {
+      function answerHeartRound(value, button = null, timedOut = false) {
         if (state.answered) return;
         const round = state.heartRounds[state.heartIndex];
-        if (!round || el("heartBellBtn").disabled) return;
+        if (!round) return;
         clearHeartTimer();
         state.answered = true;
+        const correctAction = !timedOut && value === round.answer;
+        const hand = el("slapHand");
+        if (button) {
+          const field = el("heartMode").getBoundingClientRect();
+          const card = button.getBoundingClientRect();
+          hand.style.left = `${card.left - field.left + card.width / 2}px`;
+          hand.style.top = `${card.top - field.top + card.height / 2}px`;
+          hand.classList.remove("slap-down");
+          void hand.offsetWidth;
+          hand.classList.add("slap-down");
+          button.classList.add("slap", correctAction ? "correct" : "wrong");
+        }
+        el("heartCards").querySelectorAll("button").forEach(card => { card.disabled = true; });
         const elapsed = (performance.now() - state.questionStart) / 1000;
-        const correctAction = !timedOut && ((slap && round.match) || (slap === false && !round.match));
         if (correctAction) {
           state.correct++;
           state.firstTryCorrect++;
@@ -891,18 +897,18 @@
           state.streak++;
           state.bestStreak = Math.max(state.bestStreak, state.streak);
           state.times.push(elapsed);
-          el("heartFeedback").textContent = slap ? "拍得漂亮！剛好合成目標數！" : "判斷正確，這組先放過！";
+          el("heartFeedback").textContent = `啪！拍得漂亮！${round.known}＋${round.answer}＝${round.target}！`;
           el("heartFeedback").className = "heart-feedback good";
           el("coachMascot").className = "coach-mascot cheer";
           el("coachBubble").textContent = state.streak >= 3 ? `${state.streak}連斬！反應真快！` : "好眼力！數學心臟病得分！";
           el("heartMode").classList.add("pulse");
-          playEffect(slap ? "victory" : "correct");
+          playEffect("victory");
         } else {
           state.heartLives = Math.max(0, state.heartLives - 1);
           state.streak = 0;
-          state.wrongFacts.set(`${round.a}+${round.b}≠${round.target}`, 1);
+          state.wrongFacts.set(`${round.known}+？＝${round.target}`, 1);
           el("heartLives").textContent = "❤️".repeat(state.heartLives) + "🤍".repeat(3 - state.heartLives);
-          el("heartFeedback").textContent = timedOut ? "來不及判斷，少一顆愛心！" : slap ? "誤拍了！合起來不是目標數。" : "可惜，這組剛好合成目標，要拍鈴！";
+          el("heartFeedback").textContent = timedOut ? `時間到！答案是 ${round.answer}，再看一次：${round.known}＋${round.answer}＝${round.target}。` : `哎呀！答案是 ${round.answer}，${round.known}＋${round.answer}＝${round.target}。`;
           el("heartFeedback").className = "heart-feedback try";
           el("coachMascot").className = "coach-mascot worried";
           el("coachBubble").textContent = "沒關係，吸一口氣，下一組再來！";
@@ -910,8 +916,6 @@
         }
         el("heartScore").textContent = state.heartScore;
         el("powerText").textContent = `得分 ${state.heartScore}・❤️ ${state.heartLives}`;
-        el("heartBellBtn").disabled = true;
-        el("heartPassBtn").disabled = true;
         setTimeout(() => {
           el("heartMode").classList.remove("pulse");
           state.heartIndex++;
@@ -928,8 +932,8 @@
         marker.classList.remove("pulled");
         void marker.offsetWidth;
         marker.classList.add("pulled");
-        el("tugBoard").classList.toggle("pull-user", bounded > 50);
-        el("tugBoard").classList.toggle("pull-computer", bounded < 50);
+        el("tugBoard").classList.toggle("pull-user", bounded < 50);
+        el("tugBoard").classList.toggle("pull-computer", bounded > 50);
         el("powerText").textContent = `繩子拉力 ${bounded}%`;
         if (message) el("tugStatus").textContent = message;
       }
@@ -976,6 +980,8 @@
       }
 
       function renderQuestion() {
+        const savedScrollY = window.scrollY;
+        document.activeElement?.blur?.();
         clearTimer();
         clearHeartTimer();
         state.answered = false;
@@ -999,13 +1005,14 @@
         const colors = ["#ffd166", "#8fdcc8", "#91b7f4", "#d6b1ef"];
         el("answers").innerHTML = q.choices.map((choice, i) => `<button class="answer-btn" type="button" data-answer="${choice}" style="--balloon:${colors[i]}">${choice}</button>`).join("");
         document.querySelectorAll("[data-answer]").forEach(btn => btn.addEventListener("click", () => answerQuestion(Number(btn.dataset.answer), btn)));
+        requestAnimationFrame(() => window.scrollTo(0, savedScrollY));
         el("progressText").textContent = `第 ${state.index + 1} 題／${state.queue.length} 題${q.review ? "（加練）" : ""}`;
         el("powerText").textContent = `功力 ${state.correct}`;
         el("progressBar").style.width = `${state.index / state.queue.length * 100}%`;
         state.questionStart = performance.now();
         state.computerThinkTime = 2.0 + Math.random() * 3.3;
         if (state.level === "challenge") {
-          const lead = state.tugPosition > 50 ? "你目前領先，" : state.tugPosition < 50 ? "電腦暫時領先，" : "目前平手，";
+          const lead = state.tugPosition < 50 ? "你目前領先，" : state.tugPosition > 50 ? "電腦暫時領先，" : "目前平手，";
           updateTugMarker(`${lead}想好答案就把繩子拉過來！`);
         }
         if (level.limit) startTimer(level.limit); else el("timerRow").hidden = true;
@@ -1059,10 +1066,10 @@
           if (!state.secondChance && !q.review) { state.firstTryCorrect++; state.times.push(elapsed); }
           if (state.level === "challenge") {
             if (elapsed <= state.computerThinkTime) {
-              state.tugPosition += 16;
+              state.tugPosition -= 16;
               updateTugMarker("答對又比電腦快！繩子往你這邊大拉一步！");
             } else {
-              state.tugPosition -= 12;
+              state.tugPosition += 12;
               updateTugMarker("答對了！電腦反應更快，繩子移向電腦！");
             }
           }
@@ -1082,10 +1089,10 @@
           const count = state.wrongFacts.get(q.fact) || 0;
           state.wrongFacts.set(q.fact, count + 1);
           if (state.level === "challenge") {
-            state.tugPosition -= 14;
+            state.tugPosition += 14;
             updateTugMarker("答錯了！電腦隊趁機把繩子拉過去！");
           }
-          const computerWins = state.level === "challenge" && state.tugPosition <= 12;
+          const computerWins = state.level === "challenge" && state.tugPosition >= 88;
           if (computerWins) {
             state.answered = true;
             updateTugMarker("電腦把繩子拉到終點了！");
@@ -1148,7 +1155,7 @@
         const old = getRecord(state.hall, state.level);
         const record = { stars: Math.max(stars, old?.stars || 0), accuracy: Math.max(accuracy, old?.accuracy || 0), avg: old?.avg ? Math.min(avg || old.avg, old.avg) : avg, date: Date.now() };
         localStorage.setItem(storageKey(state.hall, state.level), JSON.stringify(record));
-        const tugTitle = state.level === "challenge" ? state.tugPosition > 50 ? "拔河勝利！你把電腦拉過來了！" : state.tugPosition < 50 ? "電腦隊贏得拔河，再來挑戰一次！" : "平手！你和電腦勢均力敵！" : null;
+        const tugTitle = state.level === "challenge" ? state.tugPosition < 50 ? "拔河勝利！你把電腦拉過來了！" : state.tugPosition > 50 ? "電腦隊贏得拔河，再來挑戰一次！" : "平手！你和電腦勢均力敵！" : null;
         const heartTitle = state.level === "advanced" ? state.heartScore >= 8 ? "拍鈴高手！眼明手快！" : state.heartLives === 0 ? "心臟病練習完成，再挑戰一次！" : "拍鈴回合完成！" : null;
         el("resultTitle").textContent = tugTitle || heartTitle || (stars === 3 ? "功力大進步！" : stars >= 1 ? "練功完成！" : "再練一次就會更熟！");
         el("resultStars").textContent = `${"★".repeat(stars)}${"☆".repeat(3 - stars)}`;
@@ -1156,7 +1163,7 @@
         el("timeStat").textContent = avg ? `${avg.toFixed(1)}秒` : "—";
         el("streakStat").textContent = `${state.bestStreak}題`;
         const wrong = [...state.wrongFacts.keys()].slice(0, 3).map(f => f.replace("=", "＝").replace("+", "＋"));
-        let message = state.level === "advanced" ? `心臟病得分 ${state.heartScore} 分，剩下 ${state.heartLives} 顆愛心。記得先想兩張牌合起來是多少，再決定拍鈴或放過。` : state.level === "challenge" ? `拔河繩停在 ${state.tugPosition > 50 ? "你這邊" : state.tugPosition < 50 ? "電腦這邊" : "中線"}。答對而且反應快，就能多拉一步。` : wrong.length ? `再練一下：${wrong.join("、")}。這些題目下次還會回來幫你變熟！` : "每一組都答得很穩，下一次可以挑戰更高難度！";
+        let message = state.level === "advanced" ? `心臟病大手拍數字牌得分 ${state.heartScore} 分，剩下 ${state.heartLives} 顆愛心。看目標數和已知數，拍出另一部分。` : state.level === "challenge" ? `拔河繩停在 ${state.tugPosition < 50 ? "你這邊" : state.tugPosition > 50 ? "電腦這邊" : "中線"}。答對而且反應快，就能多拉一步。` : wrong.length ? `再練一下：${wrong.join("、")}。這些題目下次還會回來幫你變熟！` : "每一組都答得很穩，下一次可以挑戰更高難度！";
         if (old && avg && avg < old.avg) message += ` 你比昨日的自己快了 ${(old.avg - avg).toFixed(1)} 秒！`;
         el("focusBox").textContent = message;
         showView("resultView");
@@ -1217,8 +1224,6 @@
       el("levelBackBtn").addEventListener("click", () => showView("menuView"));
       el("gameBackBtn").addEventListener("click", () => { clearTimer(); clearHeartTimer(); stopMusic(); chooseHall(state.hall); });
       el("hintBtn").addEventListener("click", useHint);
-      el("heartBellBtn").addEventListener("click", () => answerHeartRound(true));
-      el("heartPassBtn").addEventListener("click", () => answerHeartRound(false));
       el("musicBtn").addEventListener("click", toggleMusic);
       el("soundBtn").addEventListener("click", toggleSound);
       el("retryBtn").addEventListener("click", () => startGame(state.level));
@@ -1227,8 +1232,7 @@
       window.addEventListener("keydown", event => {
         if (el("gameView").hidden || event.repeat) return;
         if (state.level === "advanced" && !state.answered) {
-          if (event.code === "Space") { event.preventDefault(); el("heartBellBtn").click(); return; }
-          if (event.key === "Enter") { event.preventDefault(); el("heartPassBtn").click(); return; }
+          if (/^[0-9]$/.test(event.key)) { el("heartCards").querySelector(`[data-heart-answer="${event.key}"]`)?.click(); return; }
         }
         if (state.answered) return;
         if (/^[0-9]$/.test(event.key)) document.querySelector(`[data-answer="${event.key}"]`)?.click();
